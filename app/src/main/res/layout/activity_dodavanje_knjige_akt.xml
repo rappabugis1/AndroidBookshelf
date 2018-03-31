@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="7dp"
+    android:paddingRight="7dp">
+
+    <ImageView
+        android:id="@+id/naslovnaStr"
+        android:layout_width="194dp"
+        android:layout_height="173dp"
+        app:srcCompat="@drawable/document" />
+
+    <Button
+        android:id="@+id/dNadjiSliku"
+        android:layout_width="196dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="Nadji sliku" />
+
+    <TextView
+        android:id="@+id/lblImeAutora"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ime autora:"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/imeAutora"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/lblNazivKnj"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Naziv knjige:"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/nazivKnjige"
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/lblKat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kategorija:"
+        android:textSize="24sp" />
+
+    <Spinner
+        android:id="@+id/sKategorijaKnjige"
+        android:layout_width="match_parent"
+        android:layout_height="54dp" />
+
+    <Button
+        android:id="@+id/dUpisiKnjigu"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:enabled="false"
+        android:text="Upisi knjigu"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+    <Button
+        android:id="@+id/dPonisti"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ponisti" />
+
+</LinearLayout>
