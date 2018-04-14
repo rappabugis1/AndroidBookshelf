@@ -8,3 +8,7 @@
 +++++ 1,2,3,4,5
 +++++ Nije uradeno:
 +++++ /
+
+spirala 2 
+uradjeno 1,2, 3 (uradjen layout), 4
+nije uradeno 3 (programabilni dio)
