@@ -3,6 +3,7 @@ package com.example.ridvan.spirala1;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +17,16 @@ import java.util.ArrayList;
 
 public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
 
-    ArrayList<Knjiga> knjige;
-    ArrayList<Knjiga> fknjige;
+    ArrayList<Knjiga> knjige, fknjige;
     Context mContext;
     Filter filter;
+    Boolean opc;
 
-    public KnjigaAdapter(Context context, ArrayList<Knjiga> items) {
+    public KnjigaAdapter(Context context, ArrayList<Knjiga> items, Boolean opc) {
         super(context, R.layout.knjiga_layout, items);
         this.knjige=items;
         this.mContext=context;
+        this.opc=opc;
     }
 
     private static class ViewHolder {
@@ -42,16 +44,17 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
             holder= new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.knjiga_layout, parent, false);
-            holder.naziv = (TextView) convertView.findViewById(R.id.eNaziv);
-            holder.autor= (TextView) convertView.findViewById(R.id.eAutor);
-            holder.slika= (ImageView) convertView.findViewById(R.id.eNaslovna);
+            holder.naziv = convertView.findViewById(R.id.eNaziv);
+            holder.autor= convertView.findViewById(R.id.eAutor);
+            holder.slika= convertView.findViewById(R.id.eNaslovna);
+            if(knjiga.oznacena)
+                convertView.setBackgroundResource(R.color.colorLightBlue);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        if(knjiga.oznacena)
-            convertView.setBackgroundResource(R.color.colorPrimaryDark);
+
         holder.naziv.setText(knjiga.getNazivKnjige());
         holder.autor.setText(knjiga.getImeAutora());
         try{
@@ -94,7 +97,11 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
                 for (int i=0; i<count; i++)
                 {
                     final Knjiga knjiga = list.get(i);
-                    final String value = knjiga.getKategorija().toLowerCase();
+                    final String value;
+                    if(!opc)
+                        value = knjiga.getKategorija().toLowerCase();
+                    else
+                        value = knjiga.getImeAutora().toLowerCase();
 
                     if (value.equals(prefix))
                     {
@@ -116,7 +123,7 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
             int count = fknjige.size();
             for (int i=0; i<count; i++)
             {
-                Knjiga knjiga = (Knjiga)fknjige.get(i);
+                Knjiga knjiga = fknjige.get(i);
                 add(knjiga);
             }
         }

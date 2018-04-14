@@ -1,18 +1,19 @@
 package com.example.ridvan.spirala1;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
-import android.os.ParcelFileDescriptor;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +25,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DodavanjeKnjigeAkt extends AppCompatActivity {
+
+public class DodavanjeKnjigeFragment extends Fragment {
+
+    ArrayList<String> kategorije, autori;
+    ArrayList<Knjiga> knjige;
+
 
     Button dNadjiSliku,dUpisiKnjigu, dPonisti;
     EditText imeAutora, nazivKnjige;
@@ -35,43 +41,34 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
     Intent data;
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == img_get) {
-            if (resultCode == RESULT_OK) {
-                try {
-                    slika_promjenjena=true;
-                    this.data=data;
-                    if(imeAutora.getText().toString().matches("") || nazivKnjige.getText().toString().matches("") || slika_promjenjena==false)
-                        dUpisiKnjigu.setEnabled(false);
-                    else dUpisiKnjigu.setEnabled(true);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle= this.getArguments();
 
-                    naslovna.setImageBitmap(getBitmapFromUri(data.getData()));
-
-                } catch (IOException e){}
-            }
+        if (bundle != null) {
+            kategorije = bundle.getStringArrayList("kat");
+            autori = bundle.getStringArrayList("aut");
+            knjige = (ArrayList<Knjiga>) bundle.getSerializable("knjig");
         }
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dodavanje_knjige_akt);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.dodavanje_knjige_akt, container, false);
 
         slika_promjenjena = false;
-        dPonisti = (Button) findViewById(R.id.dPonisti);
-        dUpisiKnjigu = (Button) findViewById(R.id.dUpisiKnjigu);
-        katKnjige= (Spinner) findViewById(R.id.sKategorijaKnjige);
-        dNadjiSliku = (Button) findViewById(R.id.dNadjiSliku);
-        naslovna = (ImageView) findViewById(R.id.naslovnaStr);
-        nazivKnjige = (EditText) findViewById(R.id.nazivKnjige);
-        imeAutora = (EditText) findViewById(R.id.imeAutora);
+        dPonisti = view.findViewById(R.id.dPonisti);
+        dUpisiKnjigu = view.findViewById(R.id.dUpisiKnjigu);
+        katKnjige= view.findViewById(R.id.sKategorijaKnjige);
+        dNadjiSliku = view.findViewById(R.id.dNadjiSliku);
+        naslovna = view.findViewById(R.id.naslovnaStr);
+        nazivKnjige = view.findViewById(R.id.nazivKnjige);
+        imeAutora = view.findViewById(R.id.imeAutora);
 
-        final ArrayList<Knjiga> knjige = (ArrayList<Knjiga>) getIntent().getSerializableExtra("knjige");
 
-        ArrayList<String> kategorije = (ArrayList<String>) getIntent().getSerializableExtra("kategorije");
         ArrayAdapter<String> sadapter ;
-        sadapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kategorije);
+        sadapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, kategorije);
         katKnjige.setAdapter(sadapter);
 
         dNadjiSliku.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +76,7 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.setType("image/*");
-                if (getIntent().resolveActivity(getPackageManager()) != null)
+                if (i.resolveActivity(getActivity().getPackageManager()) != null)
                     startActivityForResult(i, img_get);
             }
         });
@@ -87,8 +84,7 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
         dPonisti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_CANCELED);
-                finish();
+                getFragmentManager().popBackStackImmediate();
             }
         });
 
@@ -97,7 +93,7 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     FileOutputStream outputStream;
-                    outputStream = openFileOutput(nazivKnjige.getText().toString(), Context.MODE_PRIVATE);
+                    outputStream = getActivity().openFileOutput(nazivKnjige.getText().toString(), Context.MODE_PRIVATE);
                     getBitmapFromUri(data.getData()).compress(Bitmap.CompressFormat.JPEG, 30, outputStream);
                     outputStream.close();
                 } catch (IOException e){}
@@ -105,8 +101,7 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
                 knjige.add(0, new Knjiga(imeAutora.getText().toString(), nazivKnjige.getText().toString(), katKnjige.getSelectedItem().toString(), nazivKnjige.getText().toString()));
                 Intent intent = new Intent();
                 intent.putExtra("knjige",knjige);
-                setResult(RESULT_OK, intent);
-                finish();
+                getFragmentManager().popBackStackImmediate();
             }
         });
 
@@ -150,14 +145,36 @@ public class DodavanjeKnjigeAkt extends AppCompatActivity {
             }
         });
 
+        return view;
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == img_get) {
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    slika_promjenjena=true;
+                    this.data=data;
+                    if(imeAutora.getText().toString().matches("") || nazivKnjige.getText().toString().matches("") || slika_promjenjena==false)
+                        dUpisiKnjigu.setEnabled(false);
+                    else dUpisiKnjigu.setEnabled(true);
+
+                    naslovna.setImageBitmap(getBitmapFromUri(data.getData()));
+
+                } catch (IOException e){}
+            }
+        }
+    }
+
+
     Bitmap getBitmapFromUri(Uri uri) throws IOException {
-        ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
+        ParcelFileDescriptor parcelFileDescriptor = getActivity().getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
         parcelFileDescriptor.close();
         return image;
     }
-
 }

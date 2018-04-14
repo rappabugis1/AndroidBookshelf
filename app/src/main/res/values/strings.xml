@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">spirala1</string>
+
+    <string name="Nadji_sliku">Nadji sliku</string>
+    <string name="Naziv_knjige">Naziv knjige:</string>
+    <string name="Kategorija">Kategorija:</string>
+    <string name="Upisi_knjigu">Upisi knjigu</string>
+    <string name="Ponisti">Ponisti</string>
+    <string name="Ime_autora">Ime autora:</string>
+    <string name="Pretraga">Pretraga</string>
+    <string name="Autori">Autori</string>
+    <string name="Kategorije">Kategorije</string>
+    <string name="Dodaj_Knjigu">Dodaj knijgu</string>
+    <string name="Dodaj_kategoriju">Dodaj kategoriju</string>
+
+    <string name="engNadji_sliku">Search image</string>
+    <string name="engNaziv_knjige">Book name:</string>
+    <string name="engKategorija">Category:</string>
+    <string name="engUpisi_knjigu">Enter a book</string>
+    <string name="engPonisti">Cancel</string>
+    <string name="engIme_autora">Author name:</string>
+    <string name="engPretraga">Search</string>
+    <string name="engAutori">Authors</string>
+    <string name="engKategorije">Categories</string>
+    <string name="engDodaj_Knjigu">Add a book</string>
+    <string name="engDodaj_kategoriju">Add a category</string>
+
 </resources>

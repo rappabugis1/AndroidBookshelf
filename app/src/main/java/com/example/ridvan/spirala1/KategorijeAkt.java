@@ -1,6 +1,11 @@
 package com.example.ridvan.spirala1;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,94 +14,48 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import java.util.ArrayList;
 
 public class KategorijeAkt extends AppCompatActivity {
 
-    ArrayList<String> kategorije;
-    ArrayAdapter<String> adapter;
-    Button dPretraga;
-    EditText tekstPretraga;
-    Button dDodKat;
-    Button dDodKnjig ;
-    ListView listaKat ;
-    ArrayList<Knjiga> knjige;
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if(resultCode == RESULT_OK) {
-                knjige = (ArrayList<Knjiga>) data.getSerializableExtra("knjige");
-            }
-        }
-    }
+    ArrayList<String> autori;
+    ArrayList<Knjiga> knjige;
+    ArrayList<String> kategorije;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_kategorije_akt);
+        setContentView(R.layout.base_layout);
 
-        listaKat = (ListView) findViewById(R.id.listaKategorija);
-        dPretraga = (Button) findViewById(R.id.dPretraga);
-        tekstPretraga = (EditText) findViewById(R.id.tekstPretraga);
-        dDodKat = (Button) findViewById(R.id.dDodajKategoriju);
-        dDodKnjig = (Button) findViewById(R.id.dDodajKnjigu);
-        listaKat = (ListView) findViewById(R.id.listaKategorija);
+        Configuration config = getResources().getConfiguration();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         knjige = new ArrayList<Knjiga>();
         kategorije= new ArrayList<String>();
+        autori = new ArrayList<String>();
+
         kategorije.add("Fantazija"); kategorije.add("Drama"); kategorije.add("Akcija"); kategorije.add("Romantika"); kategorije.add("Komedija");
+        autori.add("Ridvan");
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, kategorije);
-        listaKat.setAdapter(adapter);
+        ListeFragment fr_poc = new ListeFragment();
 
-        dPretraga.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adapter.getFilter().filter(tekstPretraga.getText().toString(), new Filter.FilterListener() {
-                    @Override
-                    public void onFilterComplete(int count) {
-                        if (adapter.getCount()==0)
-                            dDodKat.setEnabled(true);
-                        else dDodKat.setEnabled(false);
-                    }
-                });
-            }
-        });
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("kat", kategorije);
+        bundle.putStringArrayList("aut", autori);
+        bundle.putSerializable("knjig", knjige);
 
-        dDodKat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!kategorije.contains(tekstPretraga.getText().toString())) {
-                    kategorije.add(0, tekstPretraga.getText().toString());
-                    adapter.clear();
-                    adapter.addAll(kategorije);
-                    adapter.getFilter().filter(tekstPretraga.getText().toString());
-                }
-            }
-        });
+        fr_poc.setArguments(bundle);
+        fragmentTransaction.replace(R.id.fragment_container, fr_poc);
+        fragmentTransaction.commit();
 
-        dDodKnjig.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), DodavanjeKnjigeAkt.class);
-                i.putExtra("kategorije", kategorije);
-                i.putExtra("knjige", knjige);
-                startActivityForResult(i,1);
-            }
-        });
-
-        listaKat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(getApplicationContext(), ListaKnjigaAkt.class);
-                i.putExtra("kategorija", listaKat.getItemAtPosition(position).toString());
-                i.putExtra("knjige", knjige);
-                startActivityForResult(i,1);
-            }
-        });
     }
 
 
