@@ -118,12 +118,12 @@ public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKn
 
                         for(int i=0; i<autori.size(); i++){
                             if(autori.get(i).getImeiPrezime().equals(knjig.getAutori().get(a).getImeiPrezime())){
-                                autori.get(i).dodajKnjigu(knjig.getNaziv());
+                                autori.get(i).dodajKnjigu(knjig.getId());
                                 pronadjen=true;
                             }
                         }
                         if(!pronadjen)
-                            autori.add(new Autor(knjig.getAutori().get(a).getImeiPrezime(), knjig.getNaziv()));
+                            autori.add(new Autor(knjig.getAutori().get(a).getImeiPrezime(), knjig.getId()));
                     }
                 }
 

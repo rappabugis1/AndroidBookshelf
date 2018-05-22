@@ -40,7 +40,6 @@ public class KategorijeAkt extends AppCompatActivity{
         autori = new ArrayList<Autor>();
 
         kategorije.add("Fantazija"); kategorije.add("Drama"); kategorije.add("Akcija"); kategorije.add("Romantika"); kategorije.add("Komedija");
-        autori.add(new Autor("Ridvan"));
 
         ListeFragment fr_poc = new ListeFragment();
 

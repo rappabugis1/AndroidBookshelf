@@ -99,19 +99,21 @@ public class DodavanjeKnjigeFragment extends Fragment {
                     getBitmapFromUri(data.getData()).compress(Bitmap.CompressFormat.JPEG, 30, outputStream);
                     outputStream.close();
                 } catch (IOException e){}
+                Knjiga temp = new Knjiga(imeAutora.getText().toString(), nazivKnjige.getText().toString(), katKnjige.getSelectedItem().toString(), nazivKnjige.getText().toString());
+                temp.setId(imeAutora.getText().toString()+ nazivKnjige.getText().toString());
 
-                knjige.add(0, new Knjiga(imeAutora.getText().toString(), nazivKnjige.getText().toString(), katKnjige.getSelectedItem().toString(), nazivKnjige.getText().toString()));
+                knjige.add(0, temp);
 
                 boolean pronadjen=false;
 
                 for(int i=0; i<autori.size(); i++){
                     if(autori.get(i).getImeiPrezime().equals(imeAutora.getText().toString())){
-                        autori.get(i).dodajKnjigu(nazivKnjige.getText().toString());
+                        autori.get(i).dodajKnjigu(temp.getId());
                         pronadjen=true;
                     }
                 }
                 if(!pronadjen)
-                    autori.add(new Autor(imeAutora.getText().toString(), nazivKnjige.getText().toString()));
+                    autori.add(new Autor(imeAutora.getText().toString(), temp.getId()));
 
                 getFragmentManager().popBackStackImmediate();
 
