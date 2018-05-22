@@ -59,27 +59,35 @@
 
     <Button
         android:id="@+id/dDodajKnjigu"
-        android:layout_width="134dp"
+        android:layout_width="96dp"
         android:layout_height="64dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="72dp"
         android:gravity="center"
         android:text="@string/Dodaj_Knjigu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dDodajKategoriju"
+        app:layout_constraintEnd_toStartOf="@+id/dDodajOnline"
         app:layout_constraintTop_toBottomOf="@+id/dAutori" />
 
     <Button
         android:id="@+id/dDodajKategoriju"
-        android:layout_width="134dp"
+        android:layout_width="109dp"
         android:layout_height="64dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="44dp"
         android:layout_marginStart="56dp"
-        android:text="@string/Dodaj_kategoriju"
         android:enabled="false"
+        android:text="@string/Dodaj_kategoriju"
         app:layout_constraintEnd_toStartOf="@+id/dDodajKnjigu"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tekstPretraga" />
+
+    <Button
+        android:id="@+id/dDodajOnline"
+        android:layout_width="129dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="16dp"
+        android:enabled="true"
+        android:text="@string/Dodaj_online"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tekstPretraga" />
 
     <ListView

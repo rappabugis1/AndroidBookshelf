@@ -1,6 +1,7 @@
 package com.example.ridvan.spirala1;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
@@ -13,7 +14,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
 
@@ -50,18 +53,33 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
             if(knjiga.oznacena)
                 convertView.setBackgroundResource(R.color.colorLightBlue);
 
+            try{
+                holder.slika.setImageBitmap(BitmapFactory.decodeStream(mContext.openFileInput(knjiga.getNaziv())));
+            }catch(FileNotFoundException e){
+                if(knjiga.getSlika()!=null){
+                    new DownloadImageTask(holder.slika).execute(knjiga.getSlika().toString());
+                }
+                else{
+                    holder.slika.setImageResource(android.R.drawable.btn_dialog);
+                }
+            }
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
+
         }
 
-        holder.naziv.setText(knjiga.getNazivKnjige());
-        holder.autor.setText(knjiga.getImeAutora());
-        try{
-            holder.slika.setImageBitmap(BitmapFactory.decodeStream(mContext.openFileInput(knjiga.nazivKnjige)));
-        }catch(FileNotFoundException e){
-            holder.slika.setImageResource(android.R.drawable.btn_dialog);
+        holder.naziv.setText(knjiga.getNaziv());
+
+        ArrayList<String> imena = new ArrayList<>();
+        for (Autor x: knjiga.getAutori()) {
+            imena.add(x.getImeiPrezime());
         }
+
+        holder.autor.setText(imena.toString());
+
+
         return convertView;
     }
 
@@ -97,16 +115,23 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
                 for (int i=0; i<count; i++)
                 {
                     final Knjiga knjiga = list.get(i);
-                    final String value;
-                    if(!opc)
+                    String value;
+                    if(!opc) {
                         value = knjiga.getKategorija().toLowerCase();
-                    else
-                        value = knjiga.getImeAutora().toLowerCase();
-
-                    if (value.equals(prefix))
-                    {
-                        nlist.add(knjiga);
+                        if (value.equals(prefix)) {
+                            nlist.add(knjiga);
+                        }
                     }
+                    else {
+                        for(int i2=0;i2<knjiga.getAutori().size();i2++) {
+                            value = knjiga.getAutori().get(i2).getImeiPrezime().toLowerCase();
+                            if (value.equals(prefix))
+                            {
+                                nlist.add(knjiga);
+                            }
+                        }
+                    }
+
                 }
                 results.values = nlist;
                 results.count = nlist.size();

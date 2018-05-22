@@ -76,7 +76,7 @@ public class KnjigeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Knjiga knjiga= (Knjiga) lista.getItemAtPosition(position);
-                temp.set(position, new Knjiga(knjiga.imeAutora,knjiga.nazivKnjige, knjiga.getKategorija(), knjiga.getSlika(), true));
+                temp.set(position, new Knjiga(knjiga, true));
                 lista.getChildAt(position).setBackgroundResource(R.color.colorLightBlue);
             }
         });

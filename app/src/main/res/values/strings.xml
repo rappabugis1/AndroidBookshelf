@@ -12,6 +12,10 @@
     <string name="Kategorije">Kategorije</string>
     <string name="Dodaj_Knjigu">Dodaj knijgu</string>
     <string name="Dodaj_kategoriju">Dodaj kategoriju</string>
+    <string name="Dodaj_online">Dodaj knjigu online</string>
+    <string name="Nazad">Nazad</string>
+
+
 
     <string name="engNadji_sliku">Search image</string>
     <string name="engNaziv_knjige">Book name:</string>

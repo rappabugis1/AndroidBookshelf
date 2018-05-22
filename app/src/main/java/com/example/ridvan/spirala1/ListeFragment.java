@@ -17,17 +17,19 @@ import android.widget.Filter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class ListeFragment extends Fragment {
 
     EditText tekstPretraga;
-    Button dDodKat, dDodKnjig, dAutori, dKat, dPretraga;
+    Button dDodKat, dDodKnjig, dAutori, dKat, dPretraga, dDodajOnline;
     ListView listaKat ;
     Boolean opcija;
     ArrayAdapter<String> adapter;
 
-    ArrayList<String> kategorije, autori;
+    ArrayList<String> kategorije;
+    ArrayList<Autor> autori;
     ArrayList<Knjiga> knjige;
 
     @Override
@@ -38,7 +40,7 @@ public class ListeFragment extends Fragment {
 
         if (bundle != null) {
             kategorije = bundle.getStringArrayList("kat");
-            autori = bundle.getStringArrayList("aut");
+            autori = (ArrayList<Autor>) bundle.getSerializable("aut");
             knjige = (ArrayList<Knjiga>) bundle.getSerializable("knjig");
         }
     }
@@ -58,6 +60,7 @@ public class ListeFragment extends Fragment {
         dPretraga = view.findViewById(R.id.dPretraga);
         dDodKat = view.findViewById(R.id.dDodajKategoriju);
         dDodKnjig = view.findViewById(R.id.dDodajKnjigu);
+        dDodajOnline = view.findViewById(R.id.dDodajOnline);
 
         adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, kategorije);
         listaKat.setAdapter(adapter);
@@ -95,10 +98,12 @@ public class ListeFragment extends Fragment {
                 dDodKat.setVisibility(View.VISIBLE);
                 dPretraga.setVisibility(View.VISIBLE);
                 tekstPretraga.setVisibility(View.VISIBLE);
+                dDodajOnline.setVisibility(View.VISIBLE);
                 adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, kategorije);
                 listaKat.setAdapter(adapter);
             }
         });
+
         dAutori.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,27 +111,22 @@ public class ListeFragment extends Fragment {
                 dDodKat.setVisibility(View.GONE);
                 dPretraga.setVisibility(View.GONE);
                 tekstPretraga.setVisibility(View.GONE);
+                dDodajOnline.setVisibility(View.GONE);
 
-                for (Knjiga knj : knjige) {
-                    if(!autori.contains(knj.getImeAutora()))
-                        autori.add(knj.getImeAutora());
-                }
-
-                adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, autori);
-                listaKat.setAdapter(adapter);
+                AutorAdapter adapter1 = new AutorAdapter(getActivity(), autori);
+                listaKat.setAdapter(adapter1);
             }
         });
 
         dDodKnjig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create new fragment and transaction
                 DodavanjeKnjigeFragment frag = new DodavanjeKnjigeFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList("kat", kategorije);
-                bundle.putStringArrayList("aut", autori);
+                bundle.putSerializable("aut", autori);
                 bundle.putSerializable("knjig", knjige);
 
                 frag.setArguments(bundle);
@@ -146,7 +146,8 @@ public class ListeFragment extends Fragment {
 
                 if(opcija){
                     bundle.putBoolean("opc", true);
-                    bundle.putString("autor", listaKat.getItemAtPosition(position).toString());
+                    Autor autorTemp=(Autor) parent.getAdapter().getItem(position);
+                    bundle.putString("autor", autorTemp.getImeiPrezime());
                 }
                 else {
                     bundle.putBoolean("opc", false);
@@ -159,9 +160,28 @@ public class ListeFragment extends Fragment {
                 transaction.replace(R.id.fragment_container, frag);
                 transaction.addToBackStack(null);
                 transaction.commit();
-
             }
         });
+
+        dDodajOnline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentOnline frag = new FragmentOnline();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("kat", kategorije);
+                bundle.putSerializable("aut", autori);
+                bundle.putSerializable("knjig", knjige);
+
+                frag.setArguments(bundle);
+
+                transaction.replace(R.id.fragment_container, frag);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
 
         return view;
     }

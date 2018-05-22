@@ -23,12 +23,14 @@ import android.widget.Spinner;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
 public class DodavanjeKnjigeFragment extends Fragment {
 
-    ArrayList<String> kategorije, autori;
+    ArrayList<String> kategorije;
+    ArrayList<Autor> autori;
     ArrayList<Knjiga> knjige;
 
 
@@ -47,7 +49,7 @@ public class DodavanjeKnjigeFragment extends Fragment {
 
         if (bundle != null) {
             kategorije = bundle.getStringArrayList("kat");
-            autori = bundle.getStringArrayList("aut");
+            autori = (ArrayList<Autor>) bundle.getSerializable("aut");
             knjige = (ArrayList<Knjiga>) bundle.getSerializable("knjig");
         }
     }
@@ -99,9 +101,20 @@ public class DodavanjeKnjigeFragment extends Fragment {
                 } catch (IOException e){}
 
                 knjige.add(0, new Knjiga(imeAutora.getText().toString(), nazivKnjige.getText().toString(), katKnjige.getSelectedItem().toString(), nazivKnjige.getText().toString()));
-                Intent intent = new Intent();
-                intent.putExtra("knjige",knjige);
+
+                boolean pronadjen=false;
+
+                for(int i=0; i<autori.size(); i++){
+                    if(autori.get(i).getImeiPrezime().equals(imeAutora.getText().toString())){
+                        autori.get(i).dodajKnjigu(nazivKnjige.getText().toString());
+                        pronadjen=true;
+                    }
+                }
+                if(!pronadjen)
+                    autori.add(new Autor(imeAutora.getText().toString(), nazivKnjige.getText().toString()));
+
                 getFragmentManager().popBackStackImmediate();
+
             }
         });
 

@@ -18,15 +18,12 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import java.util.ArrayList;
 
-public class KategorijeAkt extends AppCompatActivity {
+public class KategorijeAkt extends AppCompatActivity{
 
 
-    ArrayList<String> autori;
+    ArrayList<Autor> autori;
     ArrayList<Knjiga> knjige;
     ArrayList<String> kategorije;
-
-
-
 
 
     @Override
@@ -40,16 +37,16 @@ public class KategorijeAkt extends AppCompatActivity {
 
         knjige = new ArrayList<Knjiga>();
         kategorije= new ArrayList<String>();
-        autori = new ArrayList<String>();
+        autori = new ArrayList<Autor>();
 
         kategorije.add("Fantazija"); kategorije.add("Drama"); kategorije.add("Akcija"); kategorije.add("Romantika"); kategorije.add("Komedija");
-        autori.add("Ridvan");
+        autori.add(new Autor("Ridvan"));
 
         ListeFragment fr_poc = new ListeFragment();
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("kat", kategorije);
-        bundle.putStringArrayList("aut", autori);
+        bundle.putSerializable("aut", autori);
         bundle.putSerializable("knjig", knjige);
 
         fr_poc.setArguments(bundle);
@@ -57,6 +54,5 @@ public class KategorijeAkt extends AppCompatActivity {
         fragmentTransaction.commit();
 
     }
-
 
 }
