@@ -12,3 +12,5 @@
 spirala 2 
 uradjeno 1,2, 3 (uradjen layout), 4
 nije uradeno 3 (programabilni dio)
+
+spirala 3 uradjeno sve
