@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/eKnjigaInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Knjiga" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="4dp">
+
+                <ImageView
+                    android:id="@+id/eNaslovnaP"
+                    android:layout_width="100dp"
+                    android:layout_height="98dp"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/document" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:descendantFocusability="blocksDescendants"
+                    android:orientation="vertical"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp">
+
+                    <TextView
+                        android:id="@+id/eNazivP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="30sp"
+                        app:layout_constraintStart_toEndOf="@+id/eNaslovna"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/eAutorP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toEndOf="@+id/eNaslovna"
+                        app:layout_constraintTop_toBottomOf="@+id/eNaziv" />
+
+                    <TextView
+                        android:id="@+id/eDatumObjavljivanjaP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/eBrojStranicaP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/eOpisP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/eKontakti"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Kontakti" />
+
+            <Spinner
+                android:id="@+id/sKontakti"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/dPosalji"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Posalji" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

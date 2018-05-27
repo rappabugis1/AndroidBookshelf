@@ -1,22 +1,18 @@
 package com.example.ridvan.spirala1;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.style.BackgroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
 
@@ -24,18 +20,24 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
     Context mContext;
     Filter filter;
     Boolean opc;
+    private KnjigeFragment.BtnClickListener mClickListener = null;
 
-    public KnjigaAdapter(Context context, ArrayList<Knjiga> items, Boolean opc) {
+    public KnjigaAdapter(Context context, ArrayList<Knjiga> items, Boolean opc, KnjigeFragment.BtnClickListener listener) {
         super(context, R.layout.knjiga_layout, items);
         this.knjige=items;
         this.mContext=context;
         this.opc=opc;
+        mClickListener=listener;
     }
 
     private static class ViewHolder {
         TextView naziv;
         TextView autor;
+        TextView brStranica;
+        TextView opis;
+        TextView datum;
         ImageView slika;
+        Button preporuci;
     }
 
     @Override
@@ -50,19 +52,13 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
             holder.naziv = convertView.findViewById(R.id.eNaziv);
             holder.autor= convertView.findViewById(R.id.eAutor);
             holder.slika= convertView.findViewById(R.id.eNaslovna);
+            holder.brStranica = convertView.findViewById(R.id.eBrojStranica);
+            holder.opis= convertView.findViewById(R.id.eOpis);
+            holder.datum= convertView.findViewById(R.id.eDatumObjavljivanja);
+            holder.preporuci= convertView.findViewById(R.id.dPreporuci);
+
             if(knjiga.oznacena)
                 convertView.setBackgroundResource(R.color.colorLightBlue);
-
-            try{
-                holder.slika.setImageBitmap(BitmapFactory.decodeStream(mContext.openFileInput(knjiga.getNaziv())));
-            }catch(FileNotFoundException e){
-                if(knjiga.getSlika()!=null){
-                    new DownloadImageTask(holder.slika).execute(knjiga.getSlika().toString());
-                }
-                else{
-                    holder.slika.setImageResource(android.R.drawable.btn_dialog);
-                }
-            }
 
             convertView.setTag(holder);
         } else {
@@ -77,11 +73,38 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
             imena.add(x.getImeiPrezime());
         }
 
-        holder.autor.setText(imena.toString());
+        holder.autor.setText(imena.toString()
+                .replace("[", "")  //remove the right bracket
+                .replace("]", ""));
+        holder.opis.setText(knjiga.getOpis());
+        holder.brStranica.setText(Integer.toString(knjiga.getBrojStranica()));
+        holder.datum.setText(knjiga.getDatumObjavljivanja());
 
+        try{
+            holder.slika.setImageBitmap(BitmapFactory.decodeStream(mContext.openFileInput(knjiga.getNaziv())));
+        }catch(FileNotFoundException e){
+            if(knjiga.getSlika()!=null){
+                new DownloadImageTask(holder.slika).execute(knjiga.getSlika().toString());
+            }
+            else{
+                holder.slika.setImageResource(android.R.drawable.btn_dialog);
+            }
+        }
+
+        holder.preporuci.setTag(position);
+
+        holder.preporuci.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if(mClickListener != null)
+                    mClickListener.onBtnClick((Integer) v.getTag());
+            }
+        });
 
         return convertView;
     }
+
 
     @Override
     public Filter getFilter()

@@ -27,6 +27,9 @@ public class Autor implements Serializable{
             knjige=new ArrayList<>();
         knjige.add(knjiga);
     }
+    public Autor(){
+
+    }
 
     public void setImeiPrezime(String imeiPrezime) {
         this.imeiPrezime = imeiPrezime;

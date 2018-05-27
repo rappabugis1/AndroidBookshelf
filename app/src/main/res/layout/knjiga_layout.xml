@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,30 +9,57 @@
         android:id="@+id/eNaslovna"
         android:layout_width="100dp"
         android:layout_height="98dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
         android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/btn_dialog" />
+        app:srcCompat="@drawable/document" />
 
-    <TextView
-        android:id="@+id/eNaziv"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="16dp"
-        android:textSize="30sp"
-        app:layout_constraintStart_toEndOf="@+id/eNaslovna"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:descendantFocusability="blocksDescendants"
+        >
 
-    <TextView
-        android:id="@+id/eAutor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="11dp"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/eNaslovna"
-        app:layout_constraintTop_toBottomOf="@+id/eNaziv" />
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/eNaziv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textSize="30sp"
+            app:layout_constraintStart_toEndOf="@+id/eNaslovna"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/eAutor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/eNaslovna"
+            app:layout_constraintTop_toBottomOf="@+id/eNaziv" />
+
+        <TextView
+            android:id="@+id/eDatumObjavljivanja"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/eBrojStranica"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/eOpis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/dPreporuci"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Preporuci" />
+    </LinearLayout>
+
+</LinearLayout>

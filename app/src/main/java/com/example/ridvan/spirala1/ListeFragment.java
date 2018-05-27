@@ -32,14 +32,18 @@ public class ListeFragment extends Fragment {
     ArrayList<Autor> autori;
     ArrayList<Knjiga> knjige;
 
+    BazaOpenHelper db;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle= this.getArguments();
 
+        db= new BazaOpenHelper(getActivity());
+        kategorije=db.dajImenaKategorija();
+
 
         if (bundle != null) {
-            kategorije = bundle.getStringArrayList("kat");
             autori = (ArrayList<Autor>) bundle.getSerializable("aut");
             knjige = (ArrayList<Knjiga>) bundle.getSerializable("knjig");
         }
@@ -82,7 +86,7 @@ public class ListeFragment extends Fragment {
         dDodKat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!kategorije.contains(tekstPretraga.getText().toString())) {
+                if(db.dodajKategoriju(tekstPretraga.getText().toString())!=-1) {
                     kategorije.add(0, tekstPretraga.getText().toString());
                     adapter.clear();
                     adapter.addAll(kategorije);

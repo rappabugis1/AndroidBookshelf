@@ -1,5 +1,6 @@
 package com.example.ridvan.spirala1;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -46,6 +47,10 @@ public class KnjigeFragment extends Fragment {
         }
     }
 
+    public interface BtnClickListener {
+        public abstract void onBtnClick(int position);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -57,7 +62,23 @@ public class KnjigeFragment extends Fragment {
 
         lblkat.setText(kategorija);
 
-        KnjigaAdapter adapter = new KnjigaAdapter(getContext(), knjige, opc);
+        KnjigaAdapter adapter = new KnjigaAdapter(getContext(), knjige, opc, new BtnClickListener() {
+            @Override
+            public void onBtnClick(int position) {
+                FragmentPreporuci frag = new FragmentPreporuci();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("knjiga",(Knjiga) lista.getItemAtPosition(position) );
+
+                frag.setArguments(bundle);
+
+                transaction.replace(R.id.fragment_container, frag);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
         lista.setAdapter(adapter);
 
         if(opc)
@@ -80,6 +101,8 @@ public class KnjigeFragment extends Fragment {
                 lista.getChildAt(position).setBackgroundResource(R.color.colorLightBlue);
             }
         });
+
+
 
         return view;
     }

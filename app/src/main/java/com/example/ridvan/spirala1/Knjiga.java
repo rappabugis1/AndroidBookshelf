@@ -97,6 +97,10 @@ public class Knjiga implements Serializable {
     String kategorija;
     Boolean oznacena;
 
+    public Knjiga (){
+
+    }
+
     public Knjiga(String id, String naziv, ArrayList<Autor> autori, String opis, String datumObjavljivanja, URL slika, int brojStranica) {
         this.id = id;
         this.naziv = naziv;
@@ -139,6 +143,9 @@ public class Knjiga implements Serializable {
         this.kategorija = kategorija;
         this.sSlika = slika;
         this.oznacena=false;
+        this.opis = "";
+        this.datumObjavljivanja = "";
+        this.brojStranica = 0;
     }
 
 }
