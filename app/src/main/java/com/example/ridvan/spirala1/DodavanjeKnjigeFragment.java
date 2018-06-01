@@ -29,11 +29,6 @@ import java.util.ArrayList;
 
 public class DodavanjeKnjigeFragment extends Fragment {
 
-    ArrayList<String> kategorije;
-    ArrayList<Autor> autori;
-    ArrayList<Knjiga> knjige;
-
-
     Button dNadjiSliku,dUpisiKnjigu, dPonisti;
     EditText imeAutora, nazivKnjige;
     Spinner katKnjige;
@@ -42,16 +37,13 @@ public class DodavanjeKnjigeFragment extends Fragment {
     Boolean slika_promjenjena;
     Intent data;
 
+    BazaOpenHelper db;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle= this.getArguments();
-
-        if (bundle != null) {
-            kategorije = bundle.getStringArrayList("kat");
-            autori = (ArrayList<Autor>) bundle.getSerializable("aut");
-            knjige = (ArrayList<Knjiga>) bundle.getSerializable("knjig");
-        }
+        db = new BazaOpenHelper(getActivity());
     }
 
     @Override
@@ -70,7 +62,7 @@ public class DodavanjeKnjigeFragment extends Fragment {
 
 
         ArrayAdapter<String> sadapter ;
-        sadapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, kategorije);
+        sadapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, db.dajImenaKategorija());
         katKnjige.setAdapter(sadapter);
 
         dNadjiSliku.setOnClickListener(new View.OnClickListener() {
@@ -100,23 +92,9 @@ public class DodavanjeKnjigeFragment extends Fragment {
                     outputStream.close();
                 } catch (IOException e){}
                 Knjiga temp = new Knjiga(imeAutora.getText().toString(), nazivKnjige.getText().toString(), katKnjige.getSelectedItem().toString(), nazivKnjige.getText().toString());
-                temp.setId(imeAutora.getText().toString()+ nazivKnjige.getText().toString());
 
-                knjige.add(0, temp);
-
-                boolean pronadjen=false;
-
-                for(int i=0; i<autori.size(); i++){
-                    if(autori.get(i).getImeiPrezime().equals(imeAutora.getText().toString())){
-                        autori.get(i).dodajKnjigu(temp.getId());
-                        pronadjen=true;
-                    }
-                }
-                if(!pronadjen)
-                    autori.add(new Autor(imeAutora.getText().toString(), temp.getId()));
-
+                db.dodajKnjigu(temp);
                 getFragmentManager().popBackStackImmediate();
-
             }
         });
 

@@ -20,19 +20,17 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+
+import com.facebook.stetho.Stetho;
+
 import java.util.ArrayList;
 
 public class KategorijeAkt extends AppCompatActivity{
 
-
-    ArrayList<Autor> autori;
-    ArrayList<Knjiga> knjige;
-    //ArrayList<String> kategorije;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.base_layout);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -41,34 +39,18 @@ public class KategorijeAkt extends AppCompatActivity{
 
         BazaOpenHelper db = new BazaOpenHelper(getApplicationContext());
 
-        Configuration config = getResources().getConfiguration();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
 
         db.dodajKategoriju("Fantazija");
         db.dodajKategoriju("Drama");
         db.dodajKategoriju("Akcija");
         db.dodajKategoriju("Romantika");
 
-        //onsite temp
-        knjige = new ArrayList<Knjiga>();
-        //kategorije= new ArrayList<String>();
-        autori = new ArrayList<Autor>();
-
-        //kategorije.add("Fantazija"); kategorije.add("Drama"); kategorije.add("Akcija"); kategorije.add("Romantika"); kategorije.add("Komedija");
-
         ListeFragment fr_poc = new ListeFragment();
 
-        Bundle bundle = new Bundle();
-        //bundle.putStringArrayList("kat", kategorije);
-        bundle.putSerializable("aut", autori);
-        bundle.putSerializable("knjig", knjige);
-
-        fr_poc.setArguments(bundle);
         fragmentTransaction.replace(R.id.fragment_container, fr_poc);
         fragmentTransaction.commit();
-
     }
 
 }

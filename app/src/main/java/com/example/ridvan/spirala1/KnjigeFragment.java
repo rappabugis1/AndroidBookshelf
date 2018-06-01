@@ -19,31 +19,29 @@ import java.util.ArrayList;
 
 public class KnjigeFragment extends Fragment {
 
-    ArrayList<Knjiga> knjige, temp;
+    ArrayList<Knjiga> knjige;
     String kategorija, autor;
     ListView lista;
     TextView lblkat;
     Button nazad;
     Boolean opc;
 
+    BazaOpenHelper db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        db = new BazaOpenHelper(getActivity());
+
         Bundle bundle= this.getArguments();
 
         if (bundle != null) {
-            temp = (ArrayList<Knjiga>) bundle.getSerializable("knjig");
-            knjige = new ArrayList<Knjiga>(temp);
-
-            if(bundle.getBoolean("opc")){
-                opc=bundle.getBoolean("opc");
-                autor=bundle.getString("autor");
-            }
-            else {
-                opc=bundle.getBoolean("opc");
-                kategorija=bundle.getString("kat");
-            }
+            knjige = new ArrayList<Knjiga>();
+            if(bundle.getBoolean("opc"))
+                knjige=db.knjigeAutora(db.dajIdAutoraPoImenu(bundle.getString("autor")));
+            else
+                knjige=db.knjigeKategorije(db.dajIdKatPoImenu(bundle.getString("kat")));
         }
     }
 
@@ -81,11 +79,6 @@ public class KnjigeFragment extends Fragment {
 
         lista.setAdapter(adapter);
 
-        if(opc)
-            adapter.getFilter().filter(autor);
-        else
-            adapter.getFilter().filter(kategorija);
-
         nazad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,12 +90,10 @@ public class KnjigeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Knjiga knjiga= (Knjiga) lista.getItemAtPosition(position);
-                temp.set(position, new Knjiga(knjiga, true));
-                lista.getChildAt(position).setBackgroundResource(R.color.colorLightBlue);
+                db.oznaciKnjigu(db.dajIdKnjigePoIdServisu(knjiga.id));
+                view.setBackgroundResource(R.color.colorLightBlue);
             }
         });
-
-
 
         return view;
     }

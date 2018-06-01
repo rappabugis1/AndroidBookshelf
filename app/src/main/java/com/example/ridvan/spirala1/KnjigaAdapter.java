@@ -45,27 +45,21 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
         Knjiga knjiga = getItem(position);
         ViewHolder holder;
 
-        if (convertView == null) {
-            holder= new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.knjiga_layout, parent, false);
-            holder.naziv = convertView.findViewById(R.id.eNaziv);
-            holder.autor= convertView.findViewById(R.id.eAutor);
-            holder.slika= convertView.findViewById(R.id.eNaslovna);
-            holder.brStranica = convertView.findViewById(R.id.eBrojStranica);
-            holder.opis= convertView.findViewById(R.id.eOpis);
-            holder.datum= convertView.findViewById(R.id.eDatumObjavljivanja);
-            holder.preporuci= convertView.findViewById(R.id.dPreporuci);
+        holder= new ViewHolder();
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        convertView = inflater.inflate(R.layout.knjiga_layout, parent, false);
+        holder.naziv = convertView.findViewById(R.id.eNaziv);
+        holder.autor= convertView.findViewById(R.id.eAutor);
+        holder.slika= convertView.findViewById(R.id.eNaslovna);
+        holder.brStranica = convertView.findViewById(R.id.eBrojStranica);
+        holder.opis= convertView.findViewById(R.id.eOpis);
+        holder.datum= convertView.findViewById(R.id.eDatumObjavljivanja);
+        holder.preporuci= convertView.findViewById(R.id.dPreporuci);
 
-            if(knjiga.oznacena)
-                convertView.setBackgroundResource(R.color.colorLightBlue);
+        if(knjiga.oznacena)
+            convertView.setBackgroundResource(R.color.colorLightBlue);
 
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-
-        }
-
+        convertView.setTag(holder);
         holder.naziv.setText(knjiga.getNaziv());
 
         ArrayList<String> imena = new ArrayList<>();
@@ -76,6 +70,7 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
         holder.autor.setText(imena.toString()
                 .replace("[", "")  //remove the right bracket
                 .replace("]", ""));
+
         holder.opis.setText(knjiga.getOpis());
         holder.brStranica.setText(Integer.toString(knjiga.getBrojStranica()));
         holder.datum.setText(knjiga.getDatumObjavljivanja());
@@ -104,7 +99,6 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
 
         return convertView;
     }
-
 
     @Override
     public Filter getFilter()

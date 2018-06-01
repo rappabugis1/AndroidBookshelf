@@ -28,25 +28,20 @@ import javax.xml.transform.Result;
 
 public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKnjigeDone, DohvatiNajnovije.IDohvatiNajnovijeDone, BookshelveReceiver.Receiver  {
 
-    ArrayList<String> kategorije;
-    ArrayList<Autor> autori;
-    ArrayList<Knjiga> knjige, rezKnjige;
+
+    ArrayList<Knjiga> rezKnjige;
 
     Spinner sRez, sKat;
     String kategorija;
     TextView upit;
     Button dAdd, dPovratak, dRun;
 
+    BazaOpenHelper db;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle= this.getArguments();
-
-        if (bundle != null) {
-            kategorije = bundle.getStringArrayList("kat");
-            autori = (ArrayList<Autor>) bundle.getSerializable("aut");
-            knjige = (ArrayList<Knjiga>) bundle.getSerializable("knjig");
-        }
+        db = new BazaOpenHelper(getActivity());
     }
 
     @Override
@@ -62,7 +57,7 @@ public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKn
         upit= view.findViewById(R.id.tekstUpit);
 
         ArrayAdapter<String> sadapter ;
-        sadapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, kategorije);
+        sadapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, db.dajImenaKategorija());
         sKat.setAdapter(sadapter);
 
         dRun.setOnClickListener(new View.OnClickListener(){
@@ -111,24 +106,9 @@ public class FragmentOnline extends Fragment implements DohvatiKnjige.IDohvatiKn
                 Knjiga knjig= rezKnjige.get(sRez.getSelectedItemPosition());
                 knjig.setKategorija((String)sKat.getSelectedItem());
 
-                if(!knjige.contains(knjig)) {
-                    knjige.add(knjig);
-                    for(int a=0; a<knjig.getAutori().size(); a++){
-                        boolean pronadjen=false;
-
-                        for(int i=0; i<autori.size(); i++){
-                            if(autori.get(i).getImeiPrezime().equals(knjig.getAutori().get(a).getImeiPrezime())){
-                                autori.get(i).dodajKnjigu(knjig.getId());
-                                pronadjen=true;
-                            }
-                        }
-                        if(!pronadjen)
-                            autori.add(new Autor(knjig.getAutori().get(a).getImeiPrezime(), knjig.getId()));
-                    }
-                }
+                db.dodajKnjigu(knjig);
 
                 getFragmentManager().popBackStackImmediate();
-
             }
         });
 

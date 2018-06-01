@@ -27,26 +27,14 @@ public class ListeFragment extends Fragment {
     ListView listaKat ;
     Boolean opcija;
     ArrayAdapter<String> adapter;
-
-    ArrayList<String> kategorije;
-    ArrayList<Autor> autori;
-    ArrayList<Knjiga> knjige;
-
+    
     BazaOpenHelper db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle= this.getArguments();
 
         db= new BazaOpenHelper(getActivity());
-        kategorije=db.dajImenaKategorija();
-
-
-        if (bundle != null) {
-            autori = (ArrayList<Autor>) bundle.getSerializable("aut");
-            knjige = (ArrayList<Knjiga>) bundle.getSerializable("knjig");
-        }
     }
 
     @Override
@@ -66,7 +54,7 @@ public class ListeFragment extends Fragment {
         dDodKnjig = view.findViewById(R.id.dDodajKnjigu);
         dDodajOnline = view.findViewById(R.id.dDodajOnline);
 
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, kategorije);
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, db.dajImenaKategorija());
         listaKat.setAdapter(adapter);
 
         dPretraga.setOnClickListener(new View.OnClickListener() {
@@ -87,9 +75,8 @@ public class ListeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(db.dodajKategoriju(tekstPretraga.getText().toString())!=-1) {
-                    kategorije.add(0, tekstPretraga.getText().toString());
                     adapter.clear();
-                    adapter.addAll(kategorije);
+                    adapter.addAll(db.dajImenaKategorija());
                     adapter.getFilter().filter(tekstPretraga.getText().toString());
                 }
             }
@@ -103,7 +90,7 @@ public class ListeFragment extends Fragment {
                 dPretraga.setVisibility(View.VISIBLE);
                 tekstPretraga.setVisibility(View.VISIBLE);
                 dDodajOnline.setVisibility(View.VISIBLE);
-                adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, kategorije);
+                adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, db.dajImenaKategorija());
                 listaKat.setAdapter(adapter);
             }
         });
@@ -116,8 +103,7 @@ public class ListeFragment extends Fragment {
                 dPretraga.setVisibility(View.GONE);
                 tekstPretraga.setVisibility(View.GONE);
                 dDodajOnline.setVisibility(View.GONE);
-
-                AutorAdapter adapter1 = new AutorAdapter(getActivity(), autori);
+                AutorAdapter adapter1 = new AutorAdapter(getActivity(), db.dajAutore());
                 listaKat.setAdapter(adapter1);
             }
         });
@@ -127,14 +113,6 @@ public class ListeFragment extends Fragment {
             public void onClick(View v) {
                 DodavanjeKnjigeFragment frag = new DodavanjeKnjigeFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("kat", kategorije);
-                bundle.putSerializable("aut", autori);
-                bundle.putSerializable("knjig", knjige);
-
-                frag.setArguments(bundle);
-
                 transaction.replace(R.id.fragment_container, frag);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -158,9 +136,7 @@ public class ListeFragment extends Fragment {
                     bundle.putString("kat", listaKat.getItemAtPosition(position).toString());
                 }
 
-                bundle.putSerializable("knjig", knjige);
                 frag.setArguments(bundle);
-
                 transaction.replace(R.id.fragment_container, frag);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -172,14 +148,6 @@ public class ListeFragment extends Fragment {
             public void onClick(View v) {
                 FragmentOnline frag = new FragmentOnline();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("kat", kategorije);
-                bundle.putSerializable("aut", autori);
-                bundle.putSerializable("knjig", knjige);
-
-                frag.setArguments(bundle);
-
                 transaction.replace(R.id.fragment_container, frag);
                 transaction.addToBackStack(null);
                 transaction.commit();

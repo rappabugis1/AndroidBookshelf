@@ -112,6 +112,17 @@ public class Knjiga implements Serializable {
         this.oznacena= false;
     }
 
+    public Knjiga(String id, String naziv, ArrayList<Autor> autori, String opis, String datumObjavljivanja, String slika, int brojStranica) {
+        this.id = id;
+        this.naziv = naziv;
+        this.autori = autori;
+        this.opis = opis;
+        this.datumObjavljivanja = datumObjavljivanja;
+        this.sSlika = slika;
+        this.brojStranica = brojStranica;
+        this.oznacena= false;
+    }
+
 
     public Knjiga (Knjiga temp, Boolean ozn){
         if(temp.getId()!=null)
@@ -142,10 +153,12 @@ public class Knjiga implements Serializable {
         this.naziv = nazivKnjige;
         this.kategorija = kategorija;
         this.sSlika = slika;
+        this.slika=null;
         this.oznacena=false;
         this.opis = "";
         this.datumObjavljivanja = "";
         this.brojStranica = 0;
+        this.id=imeAutora+nazivKnjige;
     }
 
 }

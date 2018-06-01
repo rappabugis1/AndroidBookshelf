@@ -76,7 +76,6 @@ public class KnjigePoznanika extends IntentService {
             if (urlConnectionUp.getResponseCode() == HttpsURLConnection.HTTP_OK) {
                 InputStream inUp = new BufferedInputStream(urlConnectionUp.getInputStream());
 
-
                 String rezultatUp = convertStreamToString(inUp);
 
                 JSONObject joUp = new JSONObject(rezultatUp);

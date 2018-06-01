@@ -5,9 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.security.keystore.KeyNotYetValidException;
-import android.widget.ArrayAdapter;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -151,17 +148,20 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         valuesKnjiga.put(KNJIGA_DATUMOBJAVLJIVANJA, knjiga.getDatumObjavljivanja());
         valuesKnjiga.put(KNJIGA_BROJSTRANICA, knjiga.getBrojStranica());
         valuesKnjiga.put(KNJIGA_IDWEBSERVIS, knjiga.getId());
-        valuesKnjiga.put(KNJIGA_IDKATEGORIJE, knjiga.getKategorija());
-        valuesKnjiga.put(KNJIGA_SLIKA, knjiga.getSlika().toString());
+        valuesKnjiga.put(KNJIGA_IDKATEGORIJE, dajIdKatPoImenu(knjiga.getKategorija()));
+        if(knjiga.getSlika()!=null)
+            valuesKnjiga.put(KNJIGA_SLIKA, knjiga.getSlika().toString());
+        else
+            valuesKnjiga.put(KNJIGA_SLIKA, knjiga.getsSlika().toString());
         valuesKnjiga.put(KNJIGA_PREGLEDANA, knjiga.getOznacena());
 
         long idKnjige = db.insert(DATABASE_TABLE_KNJG, null, valuesKnjiga);
 
-        for (Autor a : knjiga.getAutori()) {
-            long idAutora = dodajAutora(a.getImeiPrezime());
+        for (int i=0;i<knjiga.getAutori().size();i++) {
+            long idAutora = dodajAutora(knjiga.autori.get(i).getImeiPrezime());
 
-            if (idAutora != -1) {
-                selectQuery = "SELECT  * FROM " + DATABASE_TABLE_AUT + " WHERE " + AUTOR_IME + " = " + a.getImeiPrezime();
+            if (idAutora == -1) {
+                selectQuery = "SELECT  * FROM " + DATABASE_TABLE_AUT + " WHERE " + AUTOR_IME + " ='" + knjiga.autori.get(i).getImeiPrezime()+"'";
                 c = db.rawQuery(selectQuery, null);
                 if (c.moveToFirst())
                     idAutora = c.getLong(c.getColumnIndex(AUTOR_ID));
@@ -205,7 +205,7 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ArrayList<Knjiga> knjige = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG + " WHERE " + KNJIGA_IDKATEGORIJE + " = " + idKategorije;
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG + " WHERE " + KNJIGA_IDKATEGORIJE + " = " + idKategorije ;
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -241,6 +241,7 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         Knjiga knjiga = new Knjiga();
 
         if (c.moveToFirst()) {
+            boolean URLOk= true;
             try {
                 knjiga = new Knjiga (c.getString(c.getColumnIndex(KNJIGA_IDWEBSERVIS)),
                         c.getString(c.getColumnIndex(KNJIGA_NAZIV)),
@@ -249,11 +250,24 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
                         c.getString(c.getColumnIndex(KNJIGA_DATUMOBJAVLJIVANJA)),
                         new URL(c.getString(c.getColumnIndex(KNJIGA_SLIKA))),
                         c.getInt(c.getColumnIndex(KNJIGA_BROJSTRANICA)));
-
+                knjiga.setOznacena(c.getInt(c.getColumnIndex(KNJIGA_PREGLEDANA))>0);
                 c.close();
                 return knjiga;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
+                URLOk=false;
+            }
+            if(!URLOk){
+                knjiga = new Knjiga (c.getString(c.getColumnIndex(KNJIGA_IDWEBSERVIS)),
+                        c.getString(c.getColumnIndex(KNJIGA_NAZIV)),
+                        getAutoriKnjige(c.getLong(c.getColumnIndex(KNJIGA_ID))),
+                        c.getString(c.getColumnIndex(KNJIGA_OPIS)),
+                        c.getString(c.getColumnIndex(KNJIGA_DATUMOBJAVLJIVANJA)),
+                        c.getString(c.getColumnIndex(KNJIGA_SLIKA)),
+                        c.getInt(c.getColumnIndex(KNJIGA_BROJSTRANICA)));
+                knjiga.setOznacena(c.getInt(c.getColumnIndex(KNJIGA_PREGLEDANA))>0);
+                c.close();
+                return knjiga;
             }
         }
         return knjiga;
@@ -351,7 +365,7 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
     public long dajIdAutoraPoImenu (String ime) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_AUT+ " WHERE " + AUTOR_IME+ " = " + ime;
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_AUT+ " WHERE " + AUTOR_IME+ " = '" + ime +"'";
         Cursor c = db.rawQuery(selectQuery, null);
 
         if (c.moveToFirst()) {
@@ -364,7 +378,7 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
     public long dajIdKnjigePoIdServisu (String idServis) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG+ " WHERE " + KNJIGA_IDWEBSERVIS+ " = " + idServis;
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG+ " WHERE " + KNJIGA_IDWEBSERVIS+ " = '" + idServis +"'";
         Cursor c = db.rawQuery(selectQuery, null);
 
         if (c.moveToFirst()) {
@@ -392,7 +406,7 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
     public long dajIdKatPoImenu (String imeKat){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KAT+ " WHERE " + KATEGORIJE_NAZIV+ " = " + imeKat;
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KAT+ " WHERE " + KATEGORIJE_NAZIV+ " = '" + imeKat +"'";
         Cursor c = db.rawQuery(selectQuery, null);
 
         if (c.moveToFirst()) {
@@ -401,4 +415,22 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
 
         return -1;
     }
+
+    public ArrayList<Autor> dajAutore (){
+        ArrayList<Autor> autori= new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ArrayList<Knjiga> knjige = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_AUT ;
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            do {
+                autori.add(getAutor(c.getLong(c.getColumnIndex(AUTOR_ID))));
+            }while(c.moveToNext());
+        }
+
+        return autori;
+    }
+
 }
