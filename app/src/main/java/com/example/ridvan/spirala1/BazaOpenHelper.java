@@ -151,8 +151,9 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         valuesKnjiga.put(KNJIGA_IDKATEGORIJE, dajIdKatPoImenu(knjiga.getKategorija()));
         if(knjiga.getSlika()!=null)
             valuesKnjiga.put(KNJIGA_SLIKA, knjiga.getSlika().toString());
-        else
+        if(knjiga.getsSlika()!=null)
             valuesKnjiga.put(KNJIGA_SLIKA, knjiga.getsSlika().toString());
+
         valuesKnjiga.put(KNJIGA_PREGLEDANA, knjiga.getOznacena());
 
         long idKnjige = db.insert(DATABASE_TABLE_KNJG, null, valuesKnjiga);
