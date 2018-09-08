@@ -18,8 +18,10 @@
     <string name="Kontakti">Kontakti:</string>
     <string name="Knjiga">Izabrana knjiga:</string>
     <string name="Posalji">Posalji</string>
-
-
+    <string name="Opcije"> Opcije</string>
+    <string name="Home">Glavna</string>
+    <string name="sbook">Imate knjigu na umu?</string>
+    <string name="sator">Koje knjige je autor napisao...</string>
 
 
     <string name="engNadji_sliku">Search image</string>
@@ -33,5 +35,9 @@
     <string name="engKategorije">Categories</string>
     <string name="engDodaj_Knjigu">Add a book</string>
     <string name="engDodaj_kategoriju">Add a category</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

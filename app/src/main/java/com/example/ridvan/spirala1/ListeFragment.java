@@ -113,7 +113,7 @@ public class ListeFragment extends Fragment {
             public void onClick(View v) {
                 DodavanjeKnjigeFragment frag = new DodavanjeKnjigeFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, frag);
+                transaction.replace(R.id.fragment_view, frag);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -137,7 +137,7 @@ public class ListeFragment extends Fragment {
                 }
 
                 frag.setArguments(bundle);
-                transaction.replace(R.id.fragment_container, frag);
+                transaction.replace(R.id.fragment_view, frag);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -148,7 +148,7 @@ public class ListeFragment extends Fragment {
             public void onClick(View v) {
                 FragmentOnline frag = new FragmentOnline();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, frag);
+                transaction.replace(R.id.fragment_view, frag);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

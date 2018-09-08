@@ -71,7 +71,7 @@ public class KnjigeFragment extends Fragment {
 
                 frag.setArguments(bundle);
 
-                transaction.replace(R.id.fragment_container, frag);
+                transaction.replace(R.id.fragment_view, frag);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

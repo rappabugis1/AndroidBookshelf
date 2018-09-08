@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidBookshelf.iml" filepath="$PROJECT_DIR$/AndroidBookshelf.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/rma18appabugis17508.iml" filepath="$PROJECT_DIR$/rma18appabugis17508.iml" />
     </modules>
   </component>
 </project>

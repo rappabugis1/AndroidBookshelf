@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/Home" />
+        <item
+            android:id="@+id/nav_categories"
+            android:icon="@drawable/ic_library_add_black_24dp"
+            android:title="@string/Kategorije" />
+        <item
+            android:id="@+id/nav_authors"
+            android:icon="@drawable/ic_face_black_24dp"
+            android:title="@string/Autori" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/Opcije" />
+    </group>
+</menu>
