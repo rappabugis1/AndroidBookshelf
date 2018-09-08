@@ -1,17 +1,13 @@
 package com.example.ridvan.spirala1;
 
 import android.Manifest;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -19,18 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.FrameLayout;
-import android.widget.ListView;
-
 import com.facebook.stetho.Stetho;
 
-import java.util.ArrayList;
+
 
 public class KategorijeAkt extends AppCompatActivity{
 
@@ -60,7 +47,7 @@ public class KategorijeAkt extends AppCompatActivity{
 
                 switch (item.getItemId()){
                     case R.id.nav_home:
-                        FragManager(new ListeFragment());
+                        FragManager(new HomeFragment());
                         break;
                     case R.id.nav_categories:
                         FragManager(new ListeFragment());
@@ -80,8 +67,6 @@ public class KategorijeAkt extends AppCompatActivity{
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS},100);
         }
 
-
-
         BazaOpenHelper db = new BazaOpenHelper(getApplicationContext());
         db.dodajKategoriju("Fantazija");
         db.dodajKategoriju("Drama");
@@ -92,7 +77,7 @@ public class KategorijeAkt extends AppCompatActivity{
     }
 
     private void FragManager(Fragment frag){
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.fragment_view, frag);
