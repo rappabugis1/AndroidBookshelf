@@ -6,10 +6,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class SAutorFrag extends Fragment implements DohvatiNajnovije.IDohvatiNajnovijeDone{
 
@@ -56,6 +59,11 @@ public class SAutorFrag extends Fragment implements DohvatiNajnovije.IDohvatiNaj
 
         for (int i=0; i < rez.size(); i++)
             rezKnjige.add(rez.get(i));
+
+        try {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        } catch (Exception e){}
 
         TransManager(new KnjigeFragment());
     }

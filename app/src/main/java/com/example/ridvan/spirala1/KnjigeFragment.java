@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -23,34 +21,18 @@ public class KnjigeFragment extends Fragment {
     TextView lbl;
     Boolean opc;
 
-    //BazaOpenHelper db;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       /* db = new BazaOpenHelper(getActivity());
-
-        Bundle bundle= this.getArguments();
-
-        if (bundle != null) {
-            knjige = new ArrayList<Knjiga>();
-            if(bundle.getBoolean("opc"))
-                knjige=db.knjigeAutora(db.dajIdAutoraPoImenu(bundle.getString("autor")));
-            else
-                knjige=db.knjigeKategorije(db.dajIdKatPoImenu(bundle.getString("kat")));
-        }
-        */
 
        Bundle bundle= this.getArguments();
        if(bundle!=null){
            knjige = (ArrayList<Knjiga>) bundle.getSerializable("knjige");
            query = bundle.getString("query");
        }
-    }
-
-    public interface BtnClickListener {
-        public abstract void onBtnClick(int position);
     }
 
     @Override
@@ -63,14 +45,7 @@ public class KnjigeFragment extends Fragment {
 
         lbl.setText("Search results for :"+ query);
 
-        /*KnjigaAdapter adapter = new KnjigaAdapter(getContext(), knjige, opc, new BtnClickListener() {
-            @Override
-            public void onBtnClick(int position) {
-                FragmentPreporuci frag = new FragmentPreporuci();
 
-            }
-        });
-        */
 
         SKnjigeAdapter adapterS = new SKnjigeAdapter(getContext(), knjige);
         grid.setAdapter(adapterS);
@@ -78,12 +53,7 @@ public class KnjigeFragment extends Fragment {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*
-                Knjiga knjiga= (Knjiga) lista.getItemAtPosition(position);
-                db.oznaciKnjigu(db.dajIdKnjigePoIdServisu(knjiga.id));
-                view.setBackgroundResource(R.color.colorLightBlue);
-                */
-                TransManager(new FragmentPreporuci(), position);
+                TransManager(new FragmentKnjigaSaApi(), position);
             }
         });
 

@@ -102,6 +102,24 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public int pretraziKnjige(Knjiga knjiga) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG;
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            do {
+                String nazivC = c.getString(c.getColumnIndex(KNJIGA_IDWEBSERVIS));
+
+                if (nazivC.equals(knjiga.getId()))
+                    return 0;
+            } while (c.moveToNext());
+        }
+        c.close();
+        return 1;
+    }
+
     public long dodajKategoriju(String naziv) {
         SQLiteDatabase db = this.getWritableDatabase();
 

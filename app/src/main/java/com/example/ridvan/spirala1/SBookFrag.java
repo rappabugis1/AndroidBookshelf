@@ -8,12 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class SBookFrag extends Fragment implements DohvatiKnjige.IDohvatiKnjigeDone{
 
@@ -63,6 +66,11 @@ public class SBookFrag extends Fragment implements DohvatiKnjige.IDohvatiKnjigeD
 
         for (int i=0; i < rez.size(); i++)
             rezKnjige.add(rez.get(i));
+
+        try {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        } catch (Exception e){}
 
         TransManager(new KnjigeFragment());
     }

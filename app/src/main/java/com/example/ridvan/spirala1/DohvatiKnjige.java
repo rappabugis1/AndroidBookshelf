@@ -56,12 +56,13 @@ public class DohvatiKnjige extends AsyncTask<String, Integer, Void> {
 
                     JSONObject jo=new JSONObject(rezultat);
                     JSONArray items = jo.getJSONArray("items");
-                    String id ="",naziv = "", opis = "", datumObjavljivanja = "";
+                    String id ="",naziv = "unknown", opis = "No description", datumObjavljivanja = "unknown";
 
                     for(int iter=0; iter<items.length(); iter++){
                         URL slika= null;
                         int brStranica=0;
                         ArrayList<Autor> autori = new ArrayList<>();
+                        ArrayList<String> kategorije=new ArrayList<>();
 
                         JSONObject book = items.getJSONObject(iter);
                         if(book.has("id")){
@@ -73,6 +74,14 @@ public class DohvatiKnjige extends AsyncTask<String, Integer, Void> {
                             if(info.has("publishedDate")) datumObjavljivanja=info.getString("publishedDate");
                             if(info.has("pageCount")) brStranica=info.getInt("pageCount");
                             if(info.has("description")) opis=info.getString("description");
+
+                            JSONArray categories = new JSONArray();
+                            if(info.has("categories")) categories=info.getJSONArray("categories");
+
+                            for (int j = 0; j < categories.length(); j++)
+                                kategorije.add(categories.getString(j));
+                            if(categories.length()==0)
+                                kategorije.add("unknown");
 
                             JSONArray bookAuthors = new JSONArray();
                             if (info.has("authors")) bookAuthors = info.getJSONArray("authors");
@@ -98,7 +107,9 @@ public class DohvatiKnjige extends AsyncTask<String, Integer, Void> {
                             }
 
                         }
-                        filtriraneKnjige.add(new Knjiga(id, naziv, autori, opis, datumObjavljivanja, slika, brStranica));
+                        Knjiga knjiga=new Knjiga(id, naziv, autori, opis, datumObjavljivanja, slika, brStranica);
+                        knjiga.setKategorija(kategorije.get(0));
+                        filtriraneKnjige.add(knjiga);
                     }
 
                 }

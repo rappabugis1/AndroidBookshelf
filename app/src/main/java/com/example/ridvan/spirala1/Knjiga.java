@@ -97,6 +97,8 @@ public class Knjiga implements Serializable {
     String kategorija;
     Boolean oznacena;
 
+
+
     public Knjiga (){
 
     }

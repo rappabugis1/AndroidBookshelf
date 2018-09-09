@@ -15,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +27,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class FragmentPreporuci extends Fragment
+public class FragmentKnjigaSaApi extends Fragment
 {
 
     Knjiga knjiga;
+    BazaOpenHelper helper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,7 @@ public class FragmentPreporuci extends Fragment
         if(bundle!=null)
             knjiga= (Knjiga) bundle.getSerializable("knjiga");
 
+        helper=new BazaOpenHelper(getActivity());
     }
 
     private static class Contact {
@@ -53,12 +57,13 @@ public class FragmentPreporuci extends Fragment
         ImageView slika;
         Button posalji;
         Spinner kontakti;
+        Switch dodajKnjigu;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_preporuci, container, false);
+        View view = inflater.inflate(R.layout.fragment_knjiga_sa_api, container, false);
 
         final ViewHolder holder= new ViewHolder();
 
@@ -70,6 +75,28 @@ public class FragmentPreporuci extends Fragment
         holder.datum= view.findViewById(R.id.eDatumObjavljivanjaP);
         holder.posalji= view.findViewById(R.id.dPosalji);
         holder.kontakti= view.findViewById(R.id.sKontakti);
+        holder.dodajKnjigu=view.findViewById(R.id.dodajKnjigu);
+
+
+        //swith
+
+        if(helper.pretraziKnjige(knjiga)==0) {
+            holder.dodajKnjigu.setChecked(true);
+            holder.dodajKnjigu.setClickable(false);
+        } else {
+            holder.dodajKnjigu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    helper.dodajKategoriju(knjiga.getKategorija());
+                    holder.dodajKnjigu.setChecked(true);
+                    holder.dodajKnjigu.setClickable(false);
+                    helper.dodajKnjigu(knjiga);
+                }
+            });
+        }
+
+
+        //populisanje informacijama
 
         ArrayList<String> imena = new ArrayList<>();
         for (Autor x: knjiga.getAutori()) {
@@ -191,7 +218,4 @@ public class FragmentPreporuci extends Fragment
         return emlRecs;
     }
 
-    private void PosaljiEmail(){
-
-    }
 }

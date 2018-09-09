@@ -22,7 +22,9 @@
     <string name="Home">Glavna</string>
     <string name="sbook">Imate knjigu na umu?</string>
     <string name="sator">Koje knjige je autor napisao...</string>
-
+    <string name="datum">Datum objave: </string>
+    <string name="brojstr">Broj stranica: </string>
+    <string name="procitana">Procitana   </string>
 
     <string name="engNadji_sliku">Search image</string>
     <string name="engNaziv_knjige">Book name:</string>
