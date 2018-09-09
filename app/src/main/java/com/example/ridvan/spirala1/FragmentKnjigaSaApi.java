@@ -58,6 +58,7 @@ public class FragmentKnjigaSaApi extends Fragment
         Button posalji;
         Spinner kontakti;
         Switch dodajKnjigu;
+        Switch procitana;
     }
 
     @Override
@@ -76,21 +77,42 @@ public class FragmentKnjigaSaApi extends Fragment
         holder.posalji= view.findViewById(R.id.dPosalji);
         holder.kontakti= view.findViewById(R.id.sKontakti);
         holder.dodajKnjigu=view.findViewById(R.id.dodajKnjigu);
+        holder.procitana=view.findViewById(R.id.procitanaSwitch);
 
+        //swithevi
 
-        //swith
 
         if(helper.pretraziKnjige(knjiga)==0) {
             holder.dodajKnjigu.setChecked(true);
             holder.dodajKnjigu.setClickable(false);
+            if(helper.getKnjigaFromId(helper.dajIdKnjigePoIdServisu(knjiga.getId())).oznacena){
+                holder.procitana.setChecked(true);
+                holder.procitana.setClickable(false);
+            } else {
+                holder.procitana.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        holder.procitana.setClickable(false);
+                        helper.oznaciKnjigu(helper.dajIdKnjigePoIdServisu(knjiga.getId()));
+                    }
+                });
+            }
         } else {
             holder.dodajKnjigu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     helper.dodajKategoriju(knjiga.getKategorija());
-                    holder.dodajKnjigu.setChecked(true);
                     holder.dodajKnjigu.setClickable(false);
                     helper.dodajKnjigu(knjiga);
+                }
+            });
+
+            holder.procitana.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    holder.procitana.setClickable(false);
+                    holder.dodajKnjigu.setChecked(true);
+                    helper.oznaciKnjigu(helper.dajIdKnjigePoIdServisu(knjiga.getId()));
                 }
             });
         }
