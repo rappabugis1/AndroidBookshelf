@@ -48,6 +48,7 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
         holder= new ViewHolder();
         LayoutInflater inflater = LayoutInflater.from(getContext());
         convertView = inflater.inflate(R.layout.knjiga_layout, parent, false);
+
         holder.naziv = convertView.findViewById(R.id.eNaziv);
         holder.autor= convertView.findViewById(R.id.eAutor);
         holder.slika= convertView.findViewById(R.id.eNaslovna);
@@ -79,7 +80,9 @@ public class KnjigaAdapter extends ArrayAdapter<Knjiga> implements Filterable {
             holder.slika.setImageBitmap(BitmapFactory.decodeStream(mContext.openFileInput(knjiga.getNaziv())));
         }catch(FileNotFoundException e){
             if(knjiga.getSlika()!=null){
-                new DownloadImageTask(holder.slika).execute(knjiga.getSlika().toString());
+                /*new DownloadImageTask(holder.slika).execute(knjiga.getSlika().toString());
+
+                 */
             }
             else{
                 holder.slika.setImageResource(android.R.drawable.btn_dialog);

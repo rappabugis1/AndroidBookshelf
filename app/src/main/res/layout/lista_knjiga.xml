@@ -11,26 +11,22 @@
     >
 
     <TextView
-        android:id="@+id/lblNazivKategorije"
+        android:id="@+id/labelHeadListaK"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp" />
 
-    <View
-        android:id="@+id/divider3"
+    <GridView
+        android:id="@+id/gridKnjiga"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-    <Button
-        android:id="@+id/dPovratak"
-        android:layout_width="196dp"
         android:layout_height="wrap_content"
-        android:text="Nazad" />
+        android:columnWidth="100dp"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp">
 
-    <ListView
-        android:id="@+id/listaKnjiga"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    </GridView>
 
 </LinearLayout>

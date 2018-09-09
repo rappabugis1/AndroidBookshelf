@@ -19,7 +19,7 @@ import com.facebook.stetho.Stetho;
 
 
 
-public class KategorijeAkt extends AppCompatActivity{
+public class BaseActivity extends AppCompatActivity{
 
     private DrawerLayout mDrawerLayout;
 

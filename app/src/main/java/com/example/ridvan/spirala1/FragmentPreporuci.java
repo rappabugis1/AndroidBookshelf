@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,7 +64,7 @@ public class FragmentPreporuci extends Fragment
 
         holder.naziv = view.findViewById(R.id.eNazivP);
         holder.autor= view.findViewById(R.id.eAutorP);
-        holder.slika= view.findViewById(R.id.eNaslovnaP);
+        holder.slika= view.findViewById(R.id.thumb);
         holder.brStranica = view.findViewById(R.id.eBrojStranicaP);
         holder.opis= view.findViewById(R.id.eOpisP);
         holder.datum= view.findViewById(R.id.eDatumObjavljivanjaP);
@@ -81,12 +82,13 @@ public class FragmentPreporuci extends Fragment
         holder.opis.setText(knjiga.getOpis());
         holder.brStranica.setText(Integer.toString(knjiga.getBrojStranica()));
         holder.datum.setText(knjiga.getDatumObjavljivanja());
+        ProgressBar bar = view.findViewById(R.id.bar);
 
         try{
             holder.slika.setImageBitmap(BitmapFactory.decodeStream(getActivity().openFileInput(knjiga.getNaziv())));
         }catch(FileNotFoundException e){
             if(knjiga.getSlika()!=null){
-                new DownloadImageTask(holder.slika).execute(knjiga.getSlika().toString());
+                new DownloadImageTask(holder.slika, bar).execute(knjiga.getSlika().toString());
             }
             else{
                 holder.slika.setImageResource(android.R.drawable.btn_dialog);
