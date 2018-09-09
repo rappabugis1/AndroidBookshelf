@@ -42,7 +42,7 @@ public class DohvatiNajnovije extends AsyncTask<String, Integer, Void> {
                 e.printStackTrace();
             }
 
-            String url1= "https://www.googleapis.com/books/v1/volumes?q=inauthor:"+query+"&maxResults=5&orderBy=newest";
+            String url1= "https://www.googleapis.com/books/v1/volumes?q=inauthor:"+query+"&maxResults=5&orderBy=newest&fields=items(id,volumeInfo(title,authors,publishedDate,pageCount,categories,averageRating,imageLinks,description))";
 
             try{
                 URL url = new URL(url1);

@@ -31,7 +31,7 @@ public class SAutorFrag extends Fragment implements DohvatiNajnovije.IDohvatiNaj
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.home_layout_sbook, container, false);
+        final View view = inflater.inflate(R.layout.home_layout_sauthor, container, false);
 
         holder = new ViewHolder();
 
