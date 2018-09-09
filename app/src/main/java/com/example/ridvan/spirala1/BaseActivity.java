@@ -47,16 +47,15 @@ public class BaseActivity extends AppCompatActivity{
 
                 switch (item.getItemId()){
                     case R.id.nav_home:
-                        FragManager(new HomeFragment());
+                        FragManager(new HomeFragment(),false);
                         break;
                     case R.id.nav_categories:
-                        FragManager(new ListeFragment());
+                        FragManager(new ListeFragment(),false);
                         break;
                     case R.id.nav_authors:
-                        FragManager(new DodavanjeKnjigeFragment());
+                        FragManager(new ListeFragment(),true);
                         break;
                     case R.id.nav_settings:
-                        FragManager(new ListeFragment());
                         break;
                 }
                 return false;
@@ -68,17 +67,17 @@ public class BaseActivity extends AppCompatActivity{
         }
 
         BazaOpenHelper db = new BazaOpenHelper(getApplicationContext());
-        db.dodajKategoriju("Fantazija");
-        db.dodajKategoriju("Drama");
-        db.dodajKategoriju("Akcija");
-        db.dodajKategoriju("Romantika");
 
-        FragManager(new ListeFragment());
+        FragManager(new HomeFragment(),false);
     }
 
-    private void FragManager(Fragment frag){
+    private void FragManager(Fragment frag, boolean opc){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("opc",opc);
+        frag.setArguments(bundle);
 
         fragmentTransaction.replace(R.id.fragment_view, frag);
         fragmentTransaction.commit();

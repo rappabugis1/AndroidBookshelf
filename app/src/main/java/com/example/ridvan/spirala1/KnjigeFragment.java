@@ -45,8 +45,6 @@ public class KnjigeFragment extends Fragment {
 
         lbl.setText("Search results for :"+ query);
 
-
-
         SKnjigeAdapter adapterS = new SKnjigeAdapter(getContext(), knjige);
         grid.setAdapter(adapterS);
 

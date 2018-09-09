@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class PagerAdaptor extends FragmentStatePagerAdapter {
 
-    private static int NUM_ITEMS=2;
+    private static int NUM_ITEMS=3;
 
     public PagerAdaptor (FragmentManager manager){
         super(manager);
@@ -26,6 +26,8 @@ public class PagerAdaptor extends FragmentStatePagerAdapter {
             case 1:
                 return new SAutorFrag();
 
+            case 2:
+                return new SIDFrag();
         }
         return null;
     }

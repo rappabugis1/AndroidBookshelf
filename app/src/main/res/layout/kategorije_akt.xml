@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
@@ -9,98 +9,12 @@
     android:paddingRight="5dp"
     tools:context=".BaseActivity">
 
-    <EditText
-        android:id="@+id/tekstPretraga"
-        android:layout_width="0dp"
-        android:layout_height="69dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="60dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/dPretraga"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/dPretraga"
-        android:layout_width="140dp"
-        android:layout_height="67dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="8dp"
-        android:text="@string/Pretraga"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tekstPretraga"
-        app:layout_constraintTop_toTopOf="@+id/tekstPretraga" />
-
-    <Button
-        android:id="@+id/dAutori"
-        android:layout_width="134dp"
-        android:layout_height="51dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="4dp"
-        android:text="@string/Autori"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dKategorije"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/dKategorije"
-        android:layout_width="134dp"
-        android:layout_height="51dp"
-        android:layout_marginEnd="13dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="4dp"
-        android:text="@string/Kategorije"
-        app:layout_constraintEnd_toStartOf="@+id/dAutori"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/dDodajKnjigu"
-        android:layout_width="96dp"
-        android:layout_height="64dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginTop="72dp"
-        android:gravity="center"
-        android:text="@string/Dodaj_Knjigu"
-        app:layout_constraintEnd_toStartOf="@+id/dDodajOnline"
-        app:layout_constraintTop_toBottomOf="@+id/dAutori" />
-
-    <Button
-        android:id="@+id/dDodajKategoriju"
-        android:layout_width="109dp"
-        android:layout_height="64dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginStart="56dp"
-        android:enabled="false"
-        android:text="@string/Dodaj_kategoriju"
-        app:layout_constraintEnd_toStartOf="@+id/dDodajKnjigu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tekstPretraga" />
-
-    <Button
-        android:id="@+id/dDodajOnline"
-        android:layout_width="129dp"
-        android:layout_height="64dp"
-        android:layout_marginEnd="16dp"
-        android:enabled="true"
-        android:text="@string/Dodaj_online"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tekstPretraga" />
-
     <ListView
         android:id="@+id/listaKategorija"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dDodajKnjigu" />
+        android:layout_marginStart="1dp" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
