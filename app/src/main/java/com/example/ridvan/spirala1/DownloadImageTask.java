@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -29,6 +31,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
             Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
+
         return mIcon11;
     }
 
@@ -36,4 +39,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         bmImage.setImageBitmap(result);
         bar.setVisibility(View.GONE);
     }
+
+
+
 }

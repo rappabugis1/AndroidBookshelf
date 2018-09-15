@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.view.ViewDebug;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,6 +34,8 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
     public static final String KNJIGA_IDKATEGORIJE = "idkategorije";
     public static final String KNJIGA_SLIKA = "slika";
     public static final String KNJIGA_PREGLEDANA = "pregledana";
+    public static final String KNJIGA_THUMBNAIL_ID = "idthumbnail";
+
 
     //tabela autor
     public static final String DATABASE_TABLE_AUT = "Autor";
@@ -41,6 +47,12 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
     public static final String AUTORSTVO_IDAUTORA = "idautora";
     public static final String AUTORSTVO_IDKNJIGE = "idknjige";
     public static final String AUTORSTVO_ID = "_id";
+
+    //taabela thumbnail
+    public static final String DATABASE_TABLE_THUMBNAIL = "Thumbnail";
+    public static final String THUMBNAIL_IDKNJIGE = "idknjige";
+    public static final String THUMBNAIL_ID = "_id";
+    public static final String THUMBNAIL_SLIKA = "thumbPic";
 
 
     private static final String CREATE_TABLE_KATEGORIJA = "CREATE TABLE "
@@ -61,7 +73,8 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
             + KNJIGA_IDWEBSERVIS + " TEXT,"
             + KNJIGA_IDKATEGORIJE + " INTEGER,"
             + KNJIGA_SLIKA + " TEXT,"
-            + KNJIGA_PREGLEDANA + " INTEGER"
+            + KNJIGA_PREGLEDANA + " INTEGER,"
+            + KNJIGA_THUMBNAIL_ID + " INTEGER"
             + ")";
 
     private static final String CREATE_TABLE_AUTOR = "CREATE TABLE "
@@ -79,6 +92,14 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
             + AUTORSTVO_IDKNJIGE + " INTEGER"
             + ")";
 
+    private static final String CREATE_TABLE_THUMBNAIL = "CREATE TABLE "
+            + DATABASE_TABLE_THUMBNAIL
+            + "("
+            + THUMBNAIL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + THUMBNAIL_IDKNJIGE + " INTEGER,"
+            + THUMBNAIL_SLIKA + " BLOB"
+            + ")";
+
 
     public BazaOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -90,6 +111,7 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_KNJIGA);
         db.execSQL(CREATE_TABLE_AUTOR);
         db.execSQL(CREATE_TABLE_AUTORSTTVO);
+        db.execSQL(CREATE_TABLE_THUMBNAIL);
     }
 
     @Override
@@ -100,6 +122,54 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_AUTORSTVO);
 
         onCreate(db);
+    }
+
+    public long dodajThumbnail(long idKnjige, byte[] imgData){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(THUMBNAIL_SLIKA, imgData);
+        values.put(THUMBNAIL_IDKNJIGE, idKnjige);
+
+        return db.insert(DATABASE_TABLE_THUMBNAIL, null, values);
+    }
+
+    public void dodajThumbIDKnjigi(long idKnjige, long thumbID){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv =new ContentValues();
+        cv.put(KNJIGA_THUMBNAIL_ID,thumbID);
+
+        String s = String.valueOf(idKnjige);
+
+        db.update(DATABASE_TABLE_KNJG, cv, "_id=?", new String[]{s});
+    }
+
+    public byte[] dajThumbnail(long idThumb){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_THUMBNAIL+ " WHERE " + THUMBNAIL_ID + " = " + idThumb;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+
+            return c.getBlob(c.getColumnIndex(THUMBNAIL_SLIKA));
+        }
+        return null;
+    }
+
+    public long dajThumbId(long idKnjige){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG+ " WHERE " + KNJIGA_ID + " = " + idKnjige;
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            return c.getLong(c.getColumnIndex(KNJIGA_THUMBNAIL_ID));
+        }
+        return -1;
     }
 
     public int pretraziKnjige(Knjiga knjiga) {
@@ -167,6 +237,7 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         valuesKnjiga.put(KNJIGA_BROJSTRANICA, knjiga.getBrojStranica());
         valuesKnjiga.put(KNJIGA_IDWEBSERVIS, knjiga.getId());
         valuesKnjiga.put(KNJIGA_IDKATEGORIJE, dajIdKatPoImenu(knjiga.getKategorija()));
+
         if(knjiga.getSlika()!=null)
             valuesKnjiga.put(KNJIGA_SLIKA, knjiga.getSlika().toString());
         if(knjiga.getsSlika()!=null)
@@ -190,6 +261,7 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
             ContentValues valuesAutorstvo = new ContentValues();
             valuesAutorstvo.put(AUTORSTVO_IDAUTORA, idAutora);
             valuesAutorstvo.put(AUTORSTVO_IDKNJIGE, idKnjige);
+
             db.insert(DATABASE_TABLE_AUTORSTVO, null, valuesAutorstvo);
         }
 
@@ -270,7 +342,11 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
                         new URL(c.getString(c.getColumnIndex(KNJIGA_SLIKA))),
                         c.getInt(c.getColumnIndex(KNJIGA_BROJSTRANICA)));
                 knjiga.setOznacena(c.getInt(c.getColumnIndex(KNJIGA_PREGLEDANA))>0);
+                knjiga.setThumb(dajThumbnail(dajThumbId(c.getLong(c.getColumnIndex(KNJIGA_ID)))));
+
                 c.close();
+
+
                 return knjiga;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -285,6 +361,8 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
                         c.getString(c.getColumnIndex(KNJIGA_SLIKA)),
                         c.getInt(c.getColumnIndex(KNJIGA_BROJSTRANICA)));
                 knjiga.setOznacena(c.getInt(c.getColumnIndex(KNJIGA_PREGLEDANA))>0);
+                knjiga.setThumb(dajThumbnail(dajThumbId(c.getLong(c.getColumnIndex(KNJIGA_ID)))));
+
                 c.close();
                 return knjiga;
             }

@@ -1,6 +1,7 @@
 package com.example.ridvan.spirala1;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -96,8 +97,15 @@ public class Knjiga implements Serializable {
     int brojStranica;
     String kategorija;
     Boolean oznacena;
+    byte[] thumb= new byte[]{};
 
+    public Bitmap getThumb() {
+        return BitmapFactory.decodeByteArray(thumb, 0, thumb.length);
+    }
 
+    public void setThumb(byte[] thumb) {
+        this.thumb = thumb;
+    }
 
     public Knjiga (){
 

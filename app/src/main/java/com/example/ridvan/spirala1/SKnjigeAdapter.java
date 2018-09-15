@@ -42,11 +42,17 @@ public class SKnjigeAdapter extends BaseAdapter {
         ProgressBar bar = convertView.findViewById(R.id.bar);
         Knjiga knjiga=knjige.get(position);
 
+        if(knjiga.getThumb()!=null) {
+            imageView.setImageBitmap(knjiga.getThumb());
+            bar.setVisibility(View.GONE);
+        }
+        else
         if(knjiga.getSlika()!=null)
             new DownloadImageTask(imageView,bar).execute(knjiga.getSlika().toString());
-        else
+        else {
             imageView.setImageResource(android.R.drawable.btn_dialog);
-
+            bar.setVisibility(View.GONE);
+        }
 
         return convertView;
     }

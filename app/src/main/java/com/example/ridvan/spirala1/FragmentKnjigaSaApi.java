@@ -5,7 +5,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -23,7 +25,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -79,8 +83,40 @@ public class FragmentKnjigaSaApi extends Fragment
         holder.dodajKnjigu=view.findViewById(R.id.dodajKnjigu);
         holder.procitana=view.findViewById(R.id.procitanaSwitch);
 
-        //swithevi
 
+        //populisanje informacijama
+
+        ArrayList<String> imena = new ArrayList<>();
+        for (Autor x: knjiga.getAutori()) {
+            imena.add(x.getImeiPrezime());
+        }
+        holder.naziv.setText(knjiga.getNaziv());
+        holder.autor.setText(imena.toString()
+                .replace("[", "")  //remove the right bracket
+                .replace("]", ""));
+        holder.opis.setText(knjiga.getOpis());
+        holder.brStranica.setText(Integer.toString(knjiga.getBrojStranica()));
+        holder.datum.setText(knjiga.getDatumObjavljivanja());
+        ProgressBar bar = view.findViewById(R.id.bar);
+
+        try{
+            if(knjiga.getThumb()!=null) {
+                holder.slika.setImageBitmap(knjiga.getThumb());
+                bar.setVisibility(View.GONE);
+            }
+            else
+            holder.slika.setImageBitmap(BitmapFactory.decodeStream(getActivity().openFileInput(knjiga.getNaziv())));
+        }catch(FileNotFoundException e){
+            if(knjiga.getSlika()!=null){
+                new DownloadImageTask(holder.slika, bar).execute(knjiga.getSlika().toString());
+            }
+            else{
+                holder.slika.setImageResource(android.R.drawable.btn_dialog);
+                bar.setVisibility(View.GONE);
+            }
+        }
+
+        //swithevi
 
         if(helper.pretraziKnjige(knjiga)==0) {
             holder.dodajKnjigu.setChecked(true);
@@ -103,7 +139,10 @@ public class FragmentKnjigaSaApi extends Fragment
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     helper.dodajKategoriju(knjiga.getKategorija());
                     holder.dodajKnjigu.setClickable(false);
-                    helper.dodajKnjigu(knjiga);
+                    long id = helper.dodajKnjigu(knjiga);
+                    if(knjiga.getSlika()!=null){
+                       helper.dodajThumbIDKnjigi( id,helper.dodajThumbnail(id,bitmapToByte(((BitmapDrawable)holder.slika.getDrawable()).getBitmap())));
+                    }
                 }
             });
 
@@ -117,32 +156,6 @@ public class FragmentKnjigaSaApi extends Fragment
             });
         }
 
-
-        //populisanje informacijama
-
-        ArrayList<String> imena = new ArrayList<>();
-        for (Autor x: knjiga.getAutori()) {
-            imena.add(x.getImeiPrezime());
-        }
-        holder.naziv.setText(knjiga.getNaziv());
-        holder.autor.setText(imena.toString()
-                .replace("[", "")  //remove the right bracket
-                .replace("]", ""));
-        holder.opis.setText(knjiga.getOpis());
-        holder.brStranica.setText(Integer.toString(knjiga.getBrojStranica()));
-        holder.datum.setText(knjiga.getDatumObjavljivanja());
-        ProgressBar bar = view.findViewById(R.id.bar);
-
-        try{
-            holder.slika.setImageBitmap(BitmapFactory.decodeStream(getActivity().openFileInput(knjiga.getNaziv())));
-        }catch(FileNotFoundException e){
-            if(knjiga.getSlika()!=null){
-                new DownloadImageTask(holder.slika, bar).execute(knjiga.getSlika().toString());
-            }
-            else{
-                holder.slika.setImageResource(android.R.drawable.btn_dialog);
-            }
-        }
 
         //dio za email
 
@@ -238,6 +251,22 @@ public class FragmentKnjigaSaApi extends Fragment
 
         cur.close();
         return emlRecs;
+    }
+
+    // Bitmap to byte[]
+    public byte[] bitmapToByte(Bitmap bitmap) {
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            //bitmap to byte[] stream
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] x = stream.toByteArray();
+            //close stream to save memory
+            stream.close();
+            return x;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
