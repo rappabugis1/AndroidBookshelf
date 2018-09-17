@@ -137,11 +137,17 @@ public class FragmentKnjigaSaApi extends Fragment
             holder.dodajKnjigu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    helper.dodajKategoriju(knjiga.getKategorija());
-                    holder.dodajKnjigu.setClickable(false);
-                    long id = helper.dodajKnjigu(knjiga);
-                    if(knjiga.getSlika()!=null){
-                       helper.dodajThumbIDKnjigi( id,helper.dodajThumbnail(id,bitmapToByte(((BitmapDrawable)holder.slika.getDrawable()).getBitmap())));
+                    if(holder.slika.getDrawable()!=null) {
+                        helper.dodajKategoriju(knjiga.getKategorija());
+                        holder.dodajKnjigu.setClickable(false);
+                        long id = helper.dodajKnjigu(knjiga);
+                        if (knjiga.getSlika() != null) {
+                            helper.dodajThumbIDKnjigi(id, helper.dodajThumbnail(id, bitmapToByte(((BitmapDrawable) holder.slika.getDrawable()).getBitmap())));
+                        }
+                        dajTost("Book has been added");
+                    } else {
+                        holder.dodajKnjigu.setChecked(false);
+                        dajTost("Please wait while image is loading");
                     }
                 }
             });
@@ -149,9 +155,15 @@ public class FragmentKnjigaSaApi extends Fragment
             holder.procitana.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    holder.procitana.setClickable(false);
-                    holder.dodajKnjigu.setChecked(true);
-                    helper.oznaciKnjigu(helper.dajIdKnjigePoIdServisu(knjiga.getId()));
+                    if(holder.slika.getDrawable()!=null) {
+                        holder.procitana.setClickable(false);
+                        holder.dodajKnjigu.setChecked(true);
+                        helper.oznaciKnjigu(helper.dajIdKnjigePoIdServisu(knjiga.getId()));
+                    }
+                    else {
+                        holder.procitana.setChecked(false);
+                        dajTost("Please wait while image is loading");
+                    }
                 }
             });
         }
@@ -269,4 +281,11 @@ public class FragmentKnjigaSaApi extends Fragment
         return null;
     }
 
+    public void dajTost(String text){
+        Context context = getActivity();
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
 }
