@@ -11,18 +11,24 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +37,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class FragmentKnjigaSaApi extends Fragment
@@ -291,6 +298,46 @@ public class FragmentKnjigaSaApi extends Fragment
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.knjiga_menu, menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.change_cat:
+
+                final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
+                View sheetView = getActivity().getLayoutInflater().inflate(R.layout.promijeni_kategoriju, null);
+                mBottomSheetDialog.setContentView(sheetView);
+                mBottomSheetDialog.show();
+
+                Button ok=sheetView.findViewById(R.id.ok);
+                ArrayList<String> kat= helper.dajImenaKategorija();
+
+                final Spinner spinner = (Spinner) sheetView.findViewById(R.id.spinnerKat);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, kat);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        helper.promijeniKategorijuKnjige(knjiga.getId(), spinner.getSelectedItem().toString() );
+                        dajTost("Kategorija promijenjena!");
+                        mBottomSheetDialog.dismiss();
+                    }
+                });
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
 
 }

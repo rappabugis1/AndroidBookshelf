@@ -126,6 +126,8 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //CREATE metode
+
     public long dodajThumbnail(long idKnjige, byte[] imgData){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -146,50 +148,6 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         String s = String.valueOf(idKnjige);
 
         db.update(DATABASE_TABLE_KNJG, cv, "_id=?", new String[]{s});
-    }
-
-    public byte[] dajThumbnail(long idThumb){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_THUMBNAIL+ " WHERE " + THUMBNAIL_ID + " = " + idThumb;
-
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if (c.moveToFirst()) {
-
-            return c.getBlob(c.getColumnIndex(THUMBNAIL_SLIKA));
-        }
-        return null;
-    }
-
-    public long dajThumbId(long idKnjige){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG+ " WHERE " + KNJIGA_ID + " = " + idKnjige;
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if (c.moveToFirst()) {
-            return c.getLong(c.getColumnIndex(KNJIGA_THUMBNAIL_ID));
-        }
-        return -1;
-    }
-
-    public int pretraziKnjige(Knjiga knjiga) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG;
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if (c.moveToFirst()) {
-            do {
-                String nazivC = c.getString(c.getColumnIndex(KNJIGA_IDWEBSERVIS));
-
-                if (nazivC.equals(knjiga.getId()))
-                    return 0;
-            } while (c.moveToNext());
-        }
-        c.close();
-        return 1;
     }
 
     public long dodajKategoriju(String naziv) {
@@ -295,6 +253,9 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
 
         return db.insert(DATABASE_TABLE_AUT, null, values);
     }
+
+
+    //READ metode
 
     public ArrayList<Knjiga> knjigeKategorije(long idKategorije) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -539,6 +500,62 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         });
 
         return autori;
+    }
+
+    public byte[] dajThumbnail(long idThumb){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_THUMBNAIL+ " WHERE " + THUMBNAIL_ID + " = " + idThumb;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+
+            return c.getBlob(c.getColumnIndex(THUMBNAIL_SLIKA));
+        }
+        return null;
+    }
+
+    public long dajThumbId(long idKnjige){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG+ " WHERE " + KNJIGA_ID + " = " + idKnjige;
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            return c.getLong(c.getColumnIndex(KNJIGA_THUMBNAIL_ID));
+        }
+        return -1;
+    }
+
+    public int pretraziKnjige(Knjiga knjiga) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG;
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            do {
+                String nazivC = c.getString(c.getColumnIndex(KNJIGA_IDWEBSERVIS));
+
+                if (nazivC.equals(knjiga.getId()))
+                    return 0;
+            } while (c.moveToNext());
+        }
+        c.close();
+        return 1;
+    }
+
+    //UPDATE metode
+    public void promijeniKategorijuKnjige(String idServis, String imeNoveKat){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv =new ContentValues();
+        cv.put(KNJIGA_IDKATEGORIJE, dajIdKatPoImenu(imeNoveKat));
+
+        String s = String.valueOf(dajIdKnjigePoIdServisu(idServis));
+
+        db.update(DATABASE_TABLE_KNJG, cv, "_id=?", new String[]{s});
     }
 
 }

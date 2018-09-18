@@ -6,8 +6,7 @@
         android:id="@+id/add_cat_item"
         android:icon="@drawable/ic_add_box_black_24dp"
         app:showAsAction="ifRoom"
-        android:title="@string/Dodaj_kategoriju"
-        android:iconTint="@color/cardview_dark_background">
+        android:title="@string/Dodaj_kategoriju">
 
     </item>
 </menu>
