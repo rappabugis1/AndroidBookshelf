@@ -1,29 +1,30 @@
 package com.example.ridvan.spirala1;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Filter;
 import android.widget.ListView;
-
+import android.widget.Toast;
 
 
 public class ListeFragment extends Fragment {
 
 
-    ListView listaKat ;
+    ListView lista;
     ArrayAdapter<String> adapter;
     AutorAdapter adapter1;
-
     BazaOpenHelper db;
     boolean opc;
 
@@ -45,18 +46,18 @@ public class ListeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.kategorije_akt, container, false);
 
-        listaKat = view.findViewById(R.id.listaKategorija);
+        lista = view.findViewById(R.id.listaKategorija);
 
         if(opc){
             adapter1 = new AutorAdapter(getActivity(), db.dajAutore());
-            listaKat.setAdapter(adapter1);}
+            lista.setAdapter(adapter1);}
         else {
             adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, db.dajImenaKategorija());
-            listaKat.setAdapter(adapter);
+            lista.setAdapter(adapter);
         }
 
 
-        listaKat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 KnjigeFragment frag = new KnjigeFragment();
@@ -70,9 +71,9 @@ public class ListeFragment extends Fragment {
                     getActivity().setTitle(autorTemp.getImeiPrezime());
                 }
                 else {
-                    bundle.putSerializable("knjige", db.knjigeKategorije(db.dajIdKatPoImenu(listaKat.getItemAtPosition(position).toString())));
-                    bundle.putString("query", listaKat.getItemAtPosition(position).toString());
-                    getActivity().setTitle(listaKat.getItemAtPosition(position).toString());
+                    bundle.putSerializable("knjige", db.knjigeKategorije(db.dajIdKatPoImenu(lista.getItemAtPosition(position).toString())));
+                    bundle.putString("query", lista.getItemAtPosition(position).toString());
+                    getActivity().setTitle(lista.getItemAtPosition(position).toString());
                 }
 
                 frag.setArguments(bundle);
@@ -101,4 +102,46 @@ public class ListeFragment extends Fragment {
         inflater.inflate(R.menu.cat_menu, menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_cat_item:
+
+                final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
+                View sheetView = getActivity().getLayoutInflater().inflate(R.layout.dodaj_kategoriju, null);
+                mBottomSheetDialog.setContentView(sheetView);
+                mBottomSheetDialog.show();
+
+                Button dodaj=sheetView.findViewById(R.id.unesiKat);
+                final EditText ime= sheetView.findViewById(R.id.textKategorije);
+
+                dodaj.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(db.dodajKategoriju(ime.getText().toString())<0)
+                            dajTost("Kategorija vec postoji!");
+                        else {
+                            dajTost("Kategorija dodana!");
+                            adapter.add(ime.getText().toString());
+                        }
+
+                        mBottomSheetDialog.dismiss();
+                    }
+                });
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void dajTost(String text){
+        Context context = getActivity();
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
 }

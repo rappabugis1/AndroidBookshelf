@@ -276,6 +276,8 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_AUT;
         Cursor c = db.rawQuery(selectQuery, null);
 
+        naziv.replace("'", "");
+        
         if (c.moveToFirst()) {
             do {
                 String nazivC = c.getString(c.getColumnIndex(AUTOR_IME));
