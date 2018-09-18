@@ -1,5 +1,6 @@
 package com.example.ridvan.spirala1;
 
+import android.content.Context;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -71,8 +73,9 @@ public class SBookFrag extends Fragment implements DohvatiKnjige.IDohvatiKnjigeD
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         } catch (Exception e){}
-
-        TransManager(new KnjigeFragment());
+        if(rezKnjige.size()>0)
+            TransManager(new KnjigeFragment());
+        else dajTost("No books found");
     }
 
     private void TransManager ( Fragment frag){
@@ -83,9 +86,18 @@ public class SBookFrag extends Fragment implements DohvatiKnjige.IDohvatiKnjigeD
         bundle.putSerializable("query", holder.querytxt.getText().toString());
 
         frag.setArguments(bundle);
+        getActivity().setTitle(R.string.Pretraga);
 
         transaction.replace(R.id.fragment_view, frag);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void dajTost(String text){
+        Context context = getActivity();
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 }

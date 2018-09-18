@@ -2,7 +2,6 @@ package com.example.ridvan.spirala1;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
     }
@@ -25,6 +25,7 @@ public class HomeFragment extends Fragment {
 
         view = inflater.inflate(R.layout.home_layout, container, false);
 
+        getActivity().setTitle(R.string.Home);
         pager = view.findViewById(R.id.pager);
 
         adapter = new PagerAdaptor(getFragmentManager());
@@ -50,9 +51,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set title
+        getActivity().setTitle(R.string.Home);
+    }
 
 }

@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -45,6 +47,10 @@ public class FragmentKnjigaSaApi extends Fragment
             knjiga= (Knjiga) bundle.getSerializable("knjiga");
 
         helper=new BazaOpenHelper(getActivity());
+
+        setHasOptionsMenu(true);
+
+
     }
 
     private static class Contact {
@@ -69,7 +75,6 @@ public class FragmentKnjigaSaApi extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_knjiga_sa_api, container, false);
-
         final ViewHolder holder= new ViewHolder();
 
         holder.naziv = view.findViewById(R.id.eNazivP);
@@ -288,4 +293,11 @@ public class FragmentKnjigaSaApi extends Fragment
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.home_menu, menu);
+    }
+
 }

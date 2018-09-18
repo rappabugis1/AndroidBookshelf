@@ -64,10 +64,12 @@ public class ListeFragment extends Fragment {
                     Autor autorTemp=(Autor) parent.getAdapter().getItem(position);
                     bundle.putSerializable("knjige", db.knjigeAutora(db.dajIdAutoraPoImenu(autorTemp.getImeiPrezime())));
                     bundle.putString("query", autorTemp.getImeiPrezime());
+                    getActivity().setTitle(autorTemp.getImeiPrezime());
                 }
                 else {
                     bundle.putSerializable("knjige", db.knjigeKategorije(db.dajIdKatPoImenu(listaKat.getItemAtPosition(position).toString())));
                     bundle.putString("query", listaKat.getItemAtPosition(position).toString());
+                    getActivity().setTitle(listaKat.getItemAtPosition(position).toString());
                 }
 
                 frag.setArguments(bundle);
@@ -78,6 +80,18 @@ public class ListeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(opc)
+            getActivity().setTitle(R.string.Autori);
+        else
+            getActivity().setTitle(R.string.Kategorije);
+
+
     }
 
 

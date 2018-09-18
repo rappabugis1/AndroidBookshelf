@@ -47,15 +47,19 @@ public class BaseActivity extends AppCompatActivity{
 
                 switch (item.getItemId()){
                     case R.id.nav_home:
+                        setTitle(R.string.Home);
                         FragManager(new HomeFragment(),false);
                         break;
                     case R.id.nav_categories:
+                        setTitle(R.string.Kategorije);
                         FragManager(new ListeFragment(),false);
                         break;
                     case R.id.nav_authors:
+                        setTitle(R.string.Autori);
                         FragManager(new ListeFragment(),true);
                         break;
                     case R.id.nav_settings:
+                        setTitle(R.string.Opcije);
                         break;
                 }
                 return false;
@@ -79,7 +83,12 @@ public class BaseActivity extends AppCompatActivity{
         bundle.putBoolean("opc",opc);
         frag.setArguments(bundle);
 
-        fragmentTransaction.replace(R.id.fragment_view, frag);
+        if (fragmentManager.getBackStackEntryCount() > 1)
+            for(int i = 1; i < fragmentManager.getBackStackEntryCount(); ++i)
+                fragmentManager.popBackStack();
+
+
+        fragmentTransaction.replace(R.id.fragment_view, frag).addToBackStack(null);
         fragmentTransaction.commit();
     }
     @Override
@@ -93,5 +102,23 @@ public class BaseActivity extends AppCompatActivity{
     }
 
 
-
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else {
+            int fragments = getSupportFragmentManager().getBackStackEntryCount();
+            if (fragments == 1) {
+                finish();
+            } else {
+                if (getFragmentManager().getBackStackEntryCount() > 1) {
+                    getFragmentManager().popBackStack();
+                } else {
+                    super.onBackPressed();
+                }
+            }
+        }
+    }
 }

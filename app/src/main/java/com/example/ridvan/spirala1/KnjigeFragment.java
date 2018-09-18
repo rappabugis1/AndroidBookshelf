@@ -40,10 +40,7 @@ public class KnjigeFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.lista_knjiga, container, false);
 
-        lbl = view.findViewById(R.id.labelHeadListaK);
         grid= view.findViewById(R.id.gridKnjiga);
-
-        lbl.setText("Search results for :"+ query);
 
         SKnjigeAdapter adapterS = new SKnjigeAdapter(getContext(), knjige);
         grid.setAdapter(adapterS);
