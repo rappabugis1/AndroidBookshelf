@@ -12,6 +12,8 @@ import android.view.ViewDebug;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class BazaOpenHelper extends SQLiteOpenHelper {
 
@@ -526,6 +528,13 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
                 autori.add(getAutor(c.getLong(c.getColumnIndex(AUTOR_ID))));
             }while(c.moveToNext());
         }
+
+        Collections.sort(autori, new Comparator<Autor>() {
+            @Override
+            public int compare(Autor o1, Autor o2) {
+                return o1.getImeiPrezime().compareTo(o2.getImeiPrezime());
+            }
+        });
 
         return autori;
     }
