@@ -49,8 +49,6 @@ public class FragmentKnjigaSaApi extends Fragment
         helper=new BazaOpenHelper(getActivity());
 
         setHasOptionsMenu(true);
-
-
     }
 
     private static class Contact {
@@ -294,10 +292,5 @@ public class FragmentKnjigaSaApi extends Fragment
         toast.show();
     }
 
-    @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.home_menu, menu);
-    }
 
 }

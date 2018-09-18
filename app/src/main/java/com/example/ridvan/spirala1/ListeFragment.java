@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,7 +35,8 @@ public class ListeFragment extends Fragment {
         if(bundle!=null)
             opc= bundle.getBoolean("opc");
 
-
+        if(!opc)
+            setHasOptionsMenu(true);
         db= new BazaOpenHelper(getActivity());
     }
 
@@ -90,9 +93,12 @@ public class ListeFragment extends Fragment {
             getActivity().setTitle(R.string.Autori);
         else
             getActivity().setTitle(R.string.Kategorije);
-
-
     }
 
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.cat_menu, menu);
+    }
 
 }
