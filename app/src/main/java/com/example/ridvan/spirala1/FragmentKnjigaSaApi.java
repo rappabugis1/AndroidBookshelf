@@ -1,9 +1,11 @@
 package com.example.ridvan.spirala1;
 
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -180,53 +183,85 @@ public class FragmentKnjigaSaApi extends Fragment
             });
         }
 
-
         //dio za email
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
+                == PackageManager.PERMISSION_GRANTED) {
 
-        final ArrayList<Contact> email = new ArrayList<Contact>(getNameEmailDetails());
+            final ArrayList<Contact> email = new ArrayList<Contact>(getNameEmailDetails());
 
-        final ArrayList<String > emailadres = new ArrayList<>();
-        for (Contact a: email)
-            emailadres.add(a.email);
+            final ArrayList<String > emailadres = new ArrayList<>();
+            for (Contact a: email)
+                emailadres.add(a.email);
 
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, emailadres);
 
+            holder.kontakti.setAdapter(adapter);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, emailadres);
+            holder.posalji.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String emailName="";
 
-        holder.kontakti.setAdapter(adapter);
+                    for (Contact a: email)
+                        if(a.email==holder.kontakti.getSelectedItem())
+                            emailName = a.name;
 
-        holder.posalji.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String emailName="";
-
-                for (Contact a: email)
-                    if(a.email==holder.kontakti.getSelectedItem())
-                        emailName = a.name;
-
-                String[] TO ={((String) holder.kontakti.getSelectedItem())};
-                String[] CC ={((String) holder.kontakti.getSelectedItem())};
+                    String[] TO ={((String) holder.kontakti.getSelectedItem())};
+                    String[] CC ={((String) holder.kontakti.getSelectedItem())};
 
 
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
-                emailIntent.setData(Uri.parse("mailto:"));
-                emailIntent.setType("text/plain");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-                emailIntent.putExtra(Intent.EXTRA_CC, CC);
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Preporuka");
-                emailIntent.putExtra(Intent.EXTRA_TEXT,
-                        "Zdravo "+emailName+"," +System.getProperty("line.separator")+ "Procitaj knjigu "
-                        + holder.naziv.getText()+" od autora " + holder.autor.getText()+"!");
+                    emailIntent.setData(Uri.parse("mailto:"));
+                    emailIntent.setType("text/plain");
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                    emailIntent.putExtra(Intent.EXTRA_CC, CC);
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Preporuka");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT,
+                            "Zdravo "+emailName+"," +System.getProperty("line.separator")+ "Procitaj knjigu "
+                                    + holder.naziv.getText()+" od autora " + holder.autor.getText()+"!");
 
-                try {
-                    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                    try {
+                        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                    }
+                    catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(getActivity(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(getActivity(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            holder.posalji.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String emailName="";
+
+                    String[] TO ={((String) holder.kontakti.getSelectedItem())};
+                    String[] CC ={((String) holder.kontakti.getSelectedItem())};
+
+
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+
+                    emailIntent.setData(Uri.parse("mailto:"));
+                    emailIntent.setType("text/plain");
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                    emailIntent.putExtra(Intent.EXTRA_CC, CC);
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Preporuka");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT,
+                            "Zdravo "+emailName+"," +System.getProperty("line.separator")+ "Procitaj knjigu "
+                                    + holder.naziv.getText()+" od autora " + holder.autor.getText()+"!");
+
+                    try {
+                        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                    }
+                    catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(getActivity(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
+
+
+
 
 
         return view;

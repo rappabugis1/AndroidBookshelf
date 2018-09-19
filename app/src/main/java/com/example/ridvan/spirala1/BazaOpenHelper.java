@@ -234,7 +234,7 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_AUT;
         Cursor c = db.rawQuery(selectQuery, null);
 
-        naziv.replace("'", "");
+        naziv=naziv.replace("'", " ");
 
         if (c.moveToFirst()) {
             do {
