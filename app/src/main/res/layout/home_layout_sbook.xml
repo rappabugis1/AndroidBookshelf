@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="77dp"
+        android:layout_height="102dp"
         android:gravity="bottom|center_horizontal"
         android:text="@string/sbook"
         android:textSize="18sp" />

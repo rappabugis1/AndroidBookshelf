@@ -58,9 +58,7 @@ public class BaseActivity extends AppCompatActivity{
                         setTitle(R.string.Autori);
                         FragManager(new ListeFragment(),true);
                         break;
-                    case R.id.nav_settings:
-                        setTitle(R.string.Opcije);
-                        break;
+
                 }
                 return false;
             }

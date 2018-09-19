@@ -465,6 +465,21 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         return kategorije;
     }
 
+    public ArrayList<String> dajImenaAutora (){
+        ArrayList<String> imena = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_AUT;
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c.moveToFirst()) {
+            do {
+                imena.add(c.getString(c.getColumnIndex(AUTOR_IME)));
+            } while (c.moveToNext());
+        }
+        return imena;
+    }
+
     public long dajIdKatPoImenu (String imeKat){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -544,6 +559,70 @@ public class BazaOpenHelper extends SQLiteOpenHelper {
         }
         c.close();
         return 1;
+    }
+
+    public String dajImeNajveceKat (){
+        ArrayList<String> kategorije= dajImenaKategorija();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_KNJG + " WHERE " + KNJIGA_IDKATEGORIJE + " = ";
+        Cursor c;
+
+        String maxIme="";
+        int max=0;
+        for (String ime: kategorije) {
+            int tempMax=0;
+            c= db.rawQuery(selectQuery+dajIdKatPoImenu(ime), null);
+            if (c.moveToFirst()) {
+                do {
+                    tempMax++;
+                } while (c.moveToNext());
+            }
+            if(tempMax>max) {
+                maxIme = ime;
+                max = tempMax;
+            }
+            c.close();
+        }
+
+
+        if(max>0)
+            return maxIme;
+        else
+        return null;
+    }
+
+    public String dajImeNajvecAut (){
+        ArrayList<String> imena= dajImenaAutora();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DATABASE_TABLE_AUTORSTVO + " WHERE " + AUTORSTVO_IDAUTORA+ " = ";
+        Cursor c;
+
+        String maxIme="";
+        int max=0;
+        for (String ime: imena) {
+            int tempMax=0;
+            c= db.rawQuery(selectQuery+dajIdAutoraPoImenu(ime), null);
+            if (c.moveToFirst()) {
+                do {
+                    tempMax++;
+                } while (c.moveToNext());
+            }
+            if(tempMax>max) {
+                maxIme = ime;
+                max = tempMax;
+            }
+            c.close();
+        }
+
+
+        if(max>0)
+            return maxIme;
+        else
+            return null;
     }
 
     //UPDATE metode

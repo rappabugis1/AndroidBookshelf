@@ -100,6 +100,8 @@ public class FragmentKnjigaSaApi extends Fragment
         for (Autor x: knjiga.getAutori()) {
             imena.add(x.getImeiPrezime());
         }
+        if(knjiga.getAutori().size()==0)
+            imena.add("Author unknown");
         holder.naziv.setText(knjiga.getNaziv());
         holder.autor.setText(imena.toString()
                 .replace("[", "")  //remove the right bracket
@@ -116,7 +118,7 @@ public class FragmentKnjigaSaApi extends Fragment
             }
             else
             holder.slika.setImageBitmap(BitmapFactory.decodeStream(getActivity().openFileInput(knjiga.getNaziv())));
-        }catch(FileNotFoundException e){
+        }catch(Exception e){
             if(knjiga.getSlika()!=null){
                 new DownloadImageTask(holder.slika, bar).execute(knjiga.getSlika().toString());
             }
