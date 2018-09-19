@@ -1,4 +1,7 @@
-<b/>APK in release folder.</b>
+<b/>APK in release folder.</b><br/>
+or<br/>
+<b/>[Download here]</b><br/>
+(https://github.com/rappabugis1/AndroidBookshelf/raw/master/app/release/Bookshelfv12.apk)
 
 An android based application that serves as a portable bookshelf of read books, and books yet to be read. <br/>
 Features:<br/>
