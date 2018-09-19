@@ -3,6 +3,9 @@ or<br/>
 <b/>[Download here]</b><br/>
 (https://github.com/rappabugis1/AndroidBookshelf/raw/master/app/release/Bookshelfv12.apk)
 
+<b/>Preview</b><br/>
+![alt text](https://github.com/rappabugis1/AndroidBookshelf/blob/master/imgPreview/all.png)
+
 An android based application that serves as a portable bookshelf of read books, and books yet to be read. <br/>
 Features:<br/>
 *Add custom books that you have read, or will read in the future<br/>
