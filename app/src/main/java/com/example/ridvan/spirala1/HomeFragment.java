@@ -61,11 +61,14 @@ public class HomeFragment extends Fragment{
         RecyclerView rec2 = view.findViewById(R.id.bestAutRec);
         TextView najKat = view.findViewById(R.id.najKat);
         TextView najAut = view.findViewById(R.id.najAut);
+        TextView nema1 = view.findViewById(R.id.NemaKnjiga);
+        TextView nema2 = view.findViewById(R.id.NemaKnjiga1);
 
         String imeKat= db.dajImeNajveceKat();
         String imeAut=db.dajImeNajvecAut();
 
         if(imeKat!=null){
+            nema1.setVisibility(View.INVISIBLE);
             adapter1 = new HomeKnjigeRecViewAdapter(db.knjigeKategorije(db.dajIdKatPoImenu(imeKat)));
 
             adapter1.setClickListener(new HomeKnjigeRecViewAdapter.ItemClickListener() {
@@ -80,6 +83,8 @@ public class HomeFragment extends Fragment{
         }
 
         if(imeAut!=null){
+            nema2.setVisibility(View.INVISIBLE);
+
             adapter2 = new HomeKnjigeRecViewAdapter(db.knjigeAutora(db.dajIdAutoraPoImenu(imeAut)));
             rec2.setAdapter(adapter2);
 

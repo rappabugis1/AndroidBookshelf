@@ -27,7 +27,8 @@ public class HomeKnjigeRecViewAdapter extends RecyclerView.Adapter<HomeKnjigeRec
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_thumbnail, parent, false);
+        View v;
+        v = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_thumbnail, parent, false);
 
         return new ViewHolder(v);
 
