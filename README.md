@@ -1,4 +1,4 @@
-<b/>APK in release folder.
+<b/>APK in release folder.</b>
 
 An android based application that serves as a portable bookshelf of read books, and books yet to be read. <br/>
 Features:<br/>
